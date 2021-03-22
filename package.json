@@ -1,0 +1,28 @@
+{
+  "name": "cs546-ratemyprofessors",
+  "version": "1.0.0",
+  "description": "The repository for our CS-546 final project. Collaborators: Ronak Kachalia, Sam Severance, Karan Shah, and myself, Matthew Wisnewski",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwisnews/CS546-RateMyProfessors.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mwisnews/CS546-RateMyProfessors/issues"
+  },
+  "homepage": "https://github.com/mwisnews/CS546-RateMyProfessors#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged --verbose --pattern \"**/*.*(js|html|css|json)\""
+    }
+  },
+  "devDependencies": {
+    "husky": "^4.3.8",
+    "pretty-quick": "^3.1.0"
+  }
+}
