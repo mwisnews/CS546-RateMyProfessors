@@ -4,7 +4,8 @@
   "description": "The repository for our CS-546 final project. Collaborators: Ronak Kachalia, Sam Severance, Karan Shah, and myself, Matthew Wisnewski",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "start:dev": "./node_modules/.bin/nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -18,11 +19,15 @@
   "homepage": "https://github.com/mwisnews/CS546-RateMyProfessors#readme",
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --verbose --pattern \"**/*.*(js|html|css|json)\""
+      "pre-commit": "pretty-quick --staged --verbose --pattern \"**/*.*(js|html|handlebars|css|json)\""
     }
   },
   "devDependencies": {
     "husky": "^4.3.8",
+    "nodemon": "^2.0.7",
     "pretty-quick": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
