@@ -4,6 +4,7 @@
   "description": "The repository for our CS-546 final project. Collaborators: Ronak Kachalia, Sam Severance, Karan Shah, and myself, Matthew Wisnewski",
   "main": "index.js",
   "scripts": {
+    "seed": "node ./tasks/seed.js",
     "start": "node app.js",
     "start:dev": "./node_modules/.bin/nodemon app.js"
   },
@@ -28,6 +29,7 @@
     "pretty-quick": "^3.1.0"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongodb": "3.6.2"
   }
 }
