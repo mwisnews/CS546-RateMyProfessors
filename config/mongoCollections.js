@@ -1,18 +1,20 @@
-const dbConnection = require("./mongoConnection");
+const mongodbConnection = require("./mongodbConnection");
 
-const getCollectionFn = (collection) => {
-  let _col = undefined;
+const db = mongodbConnection.getDB();
 
-  return async () => {
-    if (!_col) {
-      const db = await dbConnection();
-      _col = await db.collection(collection);
-    }
+let _collection;
 
-    return _col;
-  };
+const getCollection = async (collection) => {
+  try {
+    if (!db) db = mongodbConnection.createConnection();
+    _collection = await db.collection(collection);
+  } catch (err) {
+    throw err;
+  }
+  return _collection;
 };
 
 module.exports = {
-  schools: getCollectionFn("schools"),
+  Schools: getCollection("Schools"),
+  Users: getCollection("Users"),
 };
