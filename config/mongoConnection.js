@@ -1,21 +1,42 @@
 const MongoClient = require("mongodb").MongoClient;
+const mongodbConfig = require("./settings.json").mongodbConfig;
 
-const mongoConfig = {
-  serverUrl: "mongodb://localhost:27017/",
-  database: "rateMyProfessors",
+let _connection;
+let _db;
+
+const createConnection = async () => {
+  try {
+    if (!_connection) {
+      _connection = await MongoClient.connect(mongodbConfig.serverURL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      _db = await _connection.db(mongodbConfig.database);
+    }
+  } catch (err) {
+    throw err;
+  }
+  return _db;
 };
 
-let _connection = undefined;
-let _db = undefined;
-
-module.exports = async () => {
-  if (!_connection) {
-    _connection = await MongoClient.connect(mongoConfig.serverUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    _db = await _connection.db(mongoConfig.database);
+const closeConnection = async (db) => {
+  let isConnectionClosed = false;
+  try {
+    await db.serverConfig.close();
+    isConnectionClosed = true;
+  } catch (err) {
+    throw err;
   }
+  return isConnectionClosed;
+};
 
+const getDB = async () => {
+  if (!_db) _db = await createConnection();
   return _db;
+};
+
+module.exports = {
+  createConnection,
+  closeConnection,
+  getDB,
 };
