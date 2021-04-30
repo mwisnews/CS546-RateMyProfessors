@@ -1,16 +1,19 @@
 const mongodbConnection = require("../config/mongoConnection");
-const ObjectID = require("mongodb").ObjectID;
+const bcrypt = require('bcrypt');
 
+const ObjectID = require("mongodb").ObjectID;
 const _collection = "Users";
+const saltRounds = 10;
 
 const addUser = async (firstName, lastName, password, email, dateJoined) => {
   try {
+    const hashedPassword = bcrypt.hashSync(password, saltRounds);
     const user = {
       firstName: firstName.toUpperCase(),
       lastName: lastName.toUpperCase(),
-      password,
+      password: hashedPassword,
       email: email.toUpperCase(),
-      dateJoined,
+      dateJoined
     };
     const db = await mongodbConnection.getDB();
     const [result] = await db
@@ -66,8 +69,9 @@ const checkLogin = async (email, password) => {
       .limit(1)
       .toArray();
     if (user) {
-      if (user.email.toUpperCase() == email.toUpperCase()) {
-        if (user.password == password) return 1;
+      if (user?.email.toUpperCase() == email.toUpperCase()) {
+        // const hashedPassword = bcrypt.hashSync(password, saltRounds);
+        if (bcrypt.compareSync(password, user.password)) return 1;
         // correct login
         else return -1; // incorrect password
       }
@@ -81,12 +85,13 @@ const checkLogin = async (email, password) => {
 
 const addReviewToUser = async (userId, reviewId) => {
   try {
+    // console.log(reviewId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
       .updateOne(
         { _id: ObjectID(userId) },
-        { $addToSet: { reviewsMade: ObjectID(reviewId) } }
+        { $addToSet: { "reviewsMade": ObjectID(reviewId) } }
       );
   } catch (err) {
     throw err;
@@ -100,7 +105,7 @@ const deleteReviewFromUser = async (userId, reviewId) => {
       .collection(_collection)
       .updateOne(
         { _id: ObjectID(userId) },
-        { $pull: { reviewsMade: ObjectID(reviewId) } }
+        { $pull: { "reviewsMade": ObjectID(reviewId) } }
       );
   } catch (err) {
     throw err;
@@ -227,6 +232,7 @@ const getUserIdWhoAddedSchoolId = async (schoolId) => {
 
 const addCommentToUser = async (userId, commentId) => {
   try {
+    // console.log("<<<<", commentId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -285,5 +291,5 @@ module.exports = {
   getUserIdWhoAddedSchoolId,
   addCommentToUser,
   deleteCommentFromUser,
-  getAllCommentsLeftByUsers,
+  getAllCommentsLeftByUsers
 };
