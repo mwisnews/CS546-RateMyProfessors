@@ -9,6 +9,7 @@ const ObjectID = require("mongodb").ObjectID;
  * output: {isInserted: boolean, userId, alreadyExists: boolean}
  */
 const addUser = async (firstName, lastName, password, email, dateJoined) => {
+  console.info("addUser() :: services :: start");
   let isInserted = false;
   let userId = null;
   let alreadyExists = false;
@@ -22,17 +23,20 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
     );
     if (result == false) alreadyExists = true;
     else {
-      isInserted = result.insertedCount != 0 ? true : false;
-      userId = result.insertedCount != 0 ? result.insertedId : null;
+      if(result?.insertedCount){
+        isInserted = result.insertedCount != 0 ? true : false;
+        userId = result.insertedCount != 0 ? result.insertedId : null;
+      }
     }
   } catch (err) {
     console.error(`${__filename} - addUser()`);
     console.error(err);
   } finally {
+    console.info("addUser() :: services :: end");
     return {
       isInserted,
       userId,
-      alreadyExists,
+      alreadyExists
     };
   }
 };
@@ -44,14 +48,17 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
  *         false - unsuccessful
  */
 const removeUser = async (id) => {
+    console.info("removeUser() :: services :: start");
   let isDeleted = false;
   try {
     const result = await userData.removeUser(id);
-    isDeleted = result.deletedCount > 0 ? true : false;
+    if(result?.deletedCount)
+      isDeleted = result.deletedCount > 0 ? true : false;
   } catch (err) {
     console.error(`${__filename} - removeUser()`);
     console.error(err);
   } finally {
+    console.info("removeUser() :: services :: end");
     return isDeleted;
   }
 };
@@ -62,16 +69,17 @@ const removeUser = async (id) => {
  * output: array
  */
 const getUsersById = async (userIds) => {
-  let users = null;
+  console.info("getUsersById() :: services :: start");
+  let result = [];
   try {
     if (!Array.isArray(userIds)) userIds = [userIds];
-    const result = await userData.getUsersById(userIds);
-    users = await result;
+    result = await userData.getUsersById(userIds);
   } catch (err) {
     console.error(`${__filename} - getUsersById()`);
     console.error(err);
   } finally {
-    return users;
+    console.info("getUsersById() :: services :: end");
+    return result;
   }
 };
 
@@ -81,14 +89,19 @@ const getUsersById = async (userIds) => {
  * output: 1 - success
  *         0 - username not found
  *         -1 - incorrect password
+ *         -9 - db error
  */
 const checkLogin = async (userId, password) => {
+    console.info("checkLogin() :: services :: start");
+    let result = -9;
   try {
-    const result = await userData.checkLogin(userId, password);
-    return result;
+    result = await userData.checkLogin(userId, password);
   } catch (err) {
     console.error(`${__filename} - checkLogin()`);
     console.error(err);
+  } finally{
+    console.info("checkLogin() :: services :: end");
+    return result;
   }
 };
 
@@ -96,5 +109,5 @@ module.exports = {
   addUser,
   removeUser,
   getUsersById,
-  checkLogin,
+  checkLogin
 };
