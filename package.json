@@ -1,7 +1,7 @@
 {
   "name": "cs546-ratemyprofessors",
   "version": "1.0.0",
-  "description": "The repository for our CS-546 final project. Collaborators: Ronak Kachalia, Sam Severance, Karan Shah, and myself, Matthew Wisnewski",
+  "description": "The repository for our CS-546 final project. Collaborators: Ronak Kachalia, Sam Severance, Karan Shah, and Matthew Wisnewski",
   "main": "index.js",
   "scripts": {
     "seed": "node ./tasks/seed.js",
@@ -31,6 +31,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "express": "^4.17.1",
+    "express-handlebars": "^5.3.1",
     "mongodb": "3.6.2"
   }
 }
