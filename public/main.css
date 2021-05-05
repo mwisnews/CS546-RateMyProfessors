@@ -1,0 +1,15 @@
+.site-header {
+  display: flex;
+}
+
+.site-header .home-link {
+  color: white;
+}
+
+.site-header .home-link:hover {
+  text-decoration: none;
+}
+
+.site-header h1 {
+  margin: 16px;
+}

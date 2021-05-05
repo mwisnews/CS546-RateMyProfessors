@@ -6,19 +6,18 @@
 
 <div id="loginFormDiv">
     <form method="POST" id="loginForm">
-        <label for="emailLogin">Please enter your email address
-            <br>
-            <input type="email" name="emailBox" id="emailLogin" placeholder="Enter Email Address">
-            <br>
-        </label>
-        <label for="passwordLogin">Please enter your password
-            <br>
-            <input type="password" name="passwordBox" id="passwordLogin" placeholder="Enter Password">
-            <br>
-        </label>
-        <br>
-        <input id="loginBtn" type="submit" value="Login">
-        <br>
+        <div class="form-group">
+            <label for="emailLogin">Please enter your email address</label>
+            <input type="email" name="emailBox" id="emailLogin" placeholder="Enter Email Address" required
+                class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="passwordLogin">Please enter your password</label>
+            <input type="password" name="passwordBox" id="passwordLogin" placeholder="Enter Password" required
+                class="form-control">
+        </div>
+
+        <button id="loginBtn" class="btn btn-primary" type="submit">Login</button>
     </form>
     <br>
     <br>
