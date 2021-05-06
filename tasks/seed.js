@@ -16,10 +16,10 @@ const userService = require("../services").userService;
     // Users Collection
     // Add Users
     let users = [
-      ["Ronak", "Kachalia", "Password", "rkachali@stevens.edu"],
-      ["Sam", "Severance", "Password", "sam@stevens.edu"],
-      ["Matt", "Wisnewski", "Password", "matt@stevens.edu"],
-      ["Karan", "Shah", "Password", "kshah@stevens.edu"],
+      ["Ronak", "Kachalia", "password", "rkachali@stevens.edu"],
+      ["Sam", "Severance", "password", "sseveran@stevens.edu"],
+      ["Matt", "Wisnewski", "password", "mwisnews@stevens.edu"],
+      ["Karan", "Shah", "password", "kshah129@stevens.edu"],
     ];
     for (const user of users) {
       result = await userService.addUser(...user, new Date());

@@ -1,6 +1,5 @@
 <div id="loginTexts">
     <h1 id="loginWelcome">Welcome to ProfChecker!</h1>
-    <br>
     <h2 id="loginPrompt">Please sign in below using your email and password.</h2>
 </div>
 
@@ -8,23 +7,27 @@
     <form method="POST" id="loginForm">
         <div class="form-group">
             <label for="emailLogin">Please enter your email address</label>
-            <input type="email" name="emailBox" id="emailLogin" placeholder="Email Address" required
-                class="form-control">
+            <input type="email" name="username" id="emailLogin" placeholder="Email Address" required
+                class="form-control" value="{{username}}">
         </div>
         <div class="form-group">
             <label for="passwordLogin">Please enter your password</label>
-            <input type="password" name="passwordBox" id="passwordLogin" placeholder="Password" required
-                class="form-control">
+            <input type="password" name="password" id="passwordLogin" placeholder="Password" required
+                class="form-control" value="{{password}}">
         </div>
 
         <button id="loginBtn" class="btn btn-primary" type="submit">Login</button>
+
+        {{#if error}}
+        <p class="error">
+            Invalid username and/or password
+        </p>
+        {{/if}}
     </form>
-    <br>
-    <br>
 </div>
 <div id="newUserLinkDiv">
     <a href="/newUser" id="newUserLink">New to ProfChecker? Sign up here!</a>
-    <!-- This links to various pages. Remove this when application is ready for testing. -->>
+    <!-- TODO: This links to various pages. Remove this when application is ready for testing. -->
     <br>
     <br>
     <a href="/logout" id="logoutLinkTEST">Click Here to Test the Logout Page</a>
