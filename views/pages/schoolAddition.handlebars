@@ -1,0 +1,99 @@
+<div id="newSchoolTexts">
+    <h1 id="newSchoolWelcome">Add a School</h1>
+    <br>
+    <h2 id="newSchoolPrompt">Please fill out the form below and click Submit.</h2>
+</div>
+<div id="newSchoolFormDiv">
+    <form method="POST" id="newSchoolForm">
+        <div class="form-group">
+            <label for="schoolNameBox">Please enter the name of the school</label>
+            <input type="text" name="schoolNameBox" id="schoolNameBox" placeholder="School Name"
+                class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label>Select Education Level</label>
+            <br>
+            <label for="highSchoolRadio">High School
+            <input type="radio" name="schoolLevelRadio" id="highSchoolRadio" value="High School"
+                class="form-control" required>
+            </label>
+            <label for="collegeRadio">College
+            <input type="radio" name="schoolLevelRadio" id="collegeRadio" value="College"
+                class="form-control" required>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="schoolCityBox">Please enter the city where the school is located</label>
+            <input type="text" name="schoolCityBox" id="schoolCityBox" placeholder="City"
+                class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="schoolState">Please select the state in which the school is located</label>
+            <select name="schoolState" id="schoolState">
+                <optgroup label="States">
+                    <option label="Alabama">Alabama</option>
+                    <option label="Alaska">Alaska</option>
+                    <option label="Arizona">Arizona</option>
+                    <option label="Arkansas">Arkansas</option>
+                    <option label="California">California</option>
+                    <option label="Colorado">Colorado</option>
+                    <option label="Connecticut">Connecticut</option>
+                    <option label="Delaware">Delaware</option>
+                    <option label="Florida">Florida</option>
+                    <option label="Georgia">Georgia</option>
+                    <option label="Hawaii">Hawaii</option>
+                    <option label="Idaho">Idaho</option>
+                    <option label="Illinois">Illinois</option>
+                    <option label="Indiana">Indiana</option>
+                    <option label="Iowa">Iowa</option>
+                    <option label="Kansas">Kansas</option>
+                    <option label="Kentucky">Kentucky</option>
+                    <option label="Louisiana">Louisiana</option>
+                    <option label="Maine">Maine</option>
+                    <option label="Maryland">Maryland</option>
+                    <option label="Massachusetts">Massachusetts</option>
+                    <option label="Michigan">Michigan</option>
+                    <option label="Minnesota">Minnesota</option>
+                    <option label="Mississippi">Mississippi</option>
+                    <option label="Missouri">Missouri</option>
+                    <option label="Montana">Montana</option>
+                    <option label="Nebraska">Nebraska</option>
+                    <option label="Nevada">Nevada</option>
+                    <option label="New Hampshire">New Hampshire</option>
+                    <option label="New Jersey">New Jersey</option>
+                    <option label="New Mexico">New Mexico</option>
+                    <option label="New York">New York</option>
+                    <option label="North Carolina">North Carolina</option>
+                    <option label="North Dakota">North Dakota</option>
+                    <option label="Ohio">Ohio</option>
+                    <option label="Oklahoma">Oklahoma</option>
+                    <option label="Oregon">Oregon</option>
+                    <option label="Pennsylvania">Pennsylvania</option>
+                    <option label="Rhode Island">Rhode Island</option>
+                    <option label="South Carolina">South Carolina</option>
+                    <option label="South Dakota">South Dakota</option>
+                    <option label="Tennessee">Tennessee</option>
+                    <option label="Texas">Texas</option>
+                    <option label="Utah">Utah</option>
+                    <option label="Vermont">Vermont</option>
+                    <option label="Virginia">Virginia</option>
+                    <option label="Washington">Washington</option>
+                    <option label="West Virginia">West Virginia</option>
+                    <option label="Wisconsin">Wisconsin</option>
+                    <option label="Wyoming">Wyoming</option>
+                </optgroup>
+                </select>
+        </div>
+
+        <div class="form-group">
+            <label for="schoolZipCodeBox">Please enter the ZIP code of the area where the school is located</label>
+            <input type="text" name="schoolZipCodeBox" id="schoolZipCodeBox" placeholder="ZIP Code"
+                class="form-control" required>
+        </div>
+
+        <button id="newSchoolSubmitBtn" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
