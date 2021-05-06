@@ -10,4 +10,8 @@ router.get("/newSchool", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  res.render("pages/schoolSelect", { title: "Select School" });
+});
+
 module.exports = router;
