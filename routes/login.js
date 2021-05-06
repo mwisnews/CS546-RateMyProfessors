@@ -28,4 +28,14 @@ router.get("/newUser", async (req, res) => {
   }
 });
 
+//DEV FOR LOGOUT
+router.get("/logout", async (req, res) => {
+  try {
+    res.render("pages/logout", { title: "Log Out" });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
 module.exports = router;
