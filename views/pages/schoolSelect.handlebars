@@ -1,3 +1,32 @@
-<div>
-  Select schools page
+<div class="schools">
+  <h2>
+    Schools
+  </h2>
+
+  <form method="POST" action="/schools">
+    <div class="form-group">
+      <label for="schoolName">Enter the name of a school</label>
+      <input type="text" name="schoolName" id="schoolName" placeholder="School Name" class="form-control"
+        value="{{schoolName}}">
+    </div>
+
+    <button id="loginBtn" class="btn btn-primary" type="submit">Search</button>
+  </form>
+
+  <div class="school-results-header">
+    <h3>{{schools.length}} Schools</h3>
+    <a href="/schools/newSchool">Add a new school!</a>
+  </div>
+
+  <ul class="list-group">
+    {{#each schools}}
+    <li class="list-group-item">
+      <a href="/schools/{{this._id}}" class="school-link">
+        {{this.name}}
+      </a>
+      <span class="location">{{this.city}}, {{this.state}}</span>
+    </li>
+    {{/each}}
+  </ul>
+
 </div>

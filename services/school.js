@@ -34,14 +34,14 @@ const addSchool = async (
       if (isSchoolInserted && result?.insertedId) {
         let insertedId = result.insertedId;
         const schoolAdded = await userData.addSchoolToUser(addedBy, insertedId);
-        if(schoolAdded?.modifiedCount)
+        if (schoolAdded?.modifiedCount)
           isSchoolAddedToUser = schoolAdded.modifiedCount > 0 ? true : false;
       }
     }
   } catch (err) {
     console.error(`${__filename} - addSchool()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("addSchool() :: services :: end");
     return isSchoolAddedToUser;
   }
@@ -58,15 +58,15 @@ const removeSchool = async (schoolId) => {
   isDeleted = false;
   try {
     let userId = await userData.getUserIdWhoAddedSchoolId(schoolId);
-    if(userId[0]?._id){
+    if (userId[0]?._id) {
       userId = userId[0]._id;
       let userResult = await userData.deleteSchoolFromUser(userId, schoolId);
       // console.log(userResult);
-      if(userResult?.modifiedCount){
+      if (userResult?.modifiedCount) {
         if (userResult.modifiedCount > 0) {
           schoolResult = await schoolData.removeSchool(schoolId);
           // console.log(schoolResult);
-          if(schoolResult?.deletedCount)
+          if (schoolResult?.deletedCount)
             isDeleted = schoolResult.deletedCount > 0 ? true : false;
         }
       }
@@ -74,9 +74,9 @@ const removeSchool = async (schoolId) => {
   } catch (err) {
     console.error(`${__filename} - removeSchool()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("removeSchool() :: services :: end");
-  return isDeleted;
+    return isDeleted;
   }
 };
 
@@ -90,12 +90,18 @@ const getAllSchools = async () => {
   let result = [];
   try {
     result = await schoolData.getAllSchools();
+    result.sort((schoolA, schoolB) => {
+      const nameA = schoolA.name.toLowerCase();
+      const nameB = schoolB.name.toLowerCase();
+      if (nameA === nameB) return 0;
+      return nameA > nameB ? 1 : -1;
+    });
   } catch (err) {
     console.error(`${__filename} - getAllSchools()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("getAllSchools() :: services :: end");
-  return result;
+    return result;
   }
 };
 
@@ -112,9 +118,9 @@ const getSchoolsById = async (schoolIds) => {
   } catch (err) {
     console.error(`${__filename} - getSchoolsById()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("getSchoolsById() :: services :: end");
-  return result;
+    return result;
   }
 };
 
@@ -144,9 +150,9 @@ const addProfessorToSchool = async (
   } catch (err) {
     console.error(`${__filename} - addProfessorToSchool()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("addProfessorToSchool() :: services :: end");
-  return isProfessorAdded;
+    return isProfessorAdded;
   }
 };
 
@@ -169,9 +175,9 @@ const removeProfessorFromSchool = async (schoolId, professorId) => {
   } catch (err) {
     console.error(`${__filename} - removeProfessorFromSchool()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("removeProfessorFromSchool() :: services :: end");
-  return isProfessorRemoved;
+    return isProfessorRemoved;
   }
 };
 
@@ -189,9 +195,9 @@ const getAllProfessorsFromSchool = async (schoolId) => {
   } catch (err) {
     console.error(`${__filename} - getAllProfessorsFromSchool()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("getAllProfessorsFromSchool() :: services :: end");
-  return professors;
+    return professors;
   }
 };
 
@@ -212,9 +218,9 @@ const getProfessorsById = async (professorIds) => {
   } catch (err) {
     console.error(`${__filename} - getProfessorsById()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("getProfessorsById() :: services :: end");
-  return professorsList;
+    return professorsList;
   }
 };
 
@@ -240,8 +246,8 @@ const addReviewToProfessor = async (
   try {
     const user = await userData.getUsersById(userId);
     // console.log(user);
-    if(Array.isArray(user)){
-      if(user.length > 0){
+    if (Array.isArray(user)) {
+      if (user.length > 0) {
         const {
           result: schoolResult,
           id: reviewId,
@@ -257,7 +263,8 @@ const addReviewToProfessor = async (
         // console.log(schoolResult);
         // console.log(reviewId);
         if (schoolResult?.modifiedCount)
-          isReviewAddedToProfessor = schoolResult.modifiedCount > 0 ? true : false;
+          isReviewAddedToProfessor =
+            schoolResult.modifiedCount > 0 ? true : false;
         if (isReviewAddedToProfessor) {
           const userResult = await userData.addReviewToUser(userId, reviewId);
           // console.log(userResult);
@@ -269,9 +276,9 @@ const addReviewToProfessor = async (
   } catch (err) {
     console.error(`${__filename} - addReviewToProfessor()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("addReviewToProfessor() :: services :: end");
-  return isReviewAddedToUser;
+    return isReviewAddedToUser;
   }
 };
 
@@ -289,13 +296,13 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
   try {
     const user = await userData.getUsersById(userId);
     // console.log(user);
-    if(Array.isArray(user)){
-      if(user.length > 0){
+    if (Array.isArray(user)) {
+      if (user.length > 0) {
         let userResult = await userData.deleteReviewFromUser(userId, reviewId);
         // console.log(userResult);
         if (userResult?.modifiedCount)
           isReviewRemovedFromUser = userResult.modifiedCount > 0 ? true : false;
-        if(isReviewRemovedFromUser){
+        if (isReviewRemovedFromUser) {
           const schoolResult = await schoolData.removeReviewFromProfessor(
             professorId,
             reviewId
@@ -304,10 +311,11 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
           if (schoolResult?.modifiedCount)
             isReviewRemovedFromProfessor =
               schoolResult.modifiedCount > 0 ? true : false;
-          if(!isReviewRemovedFromProfessor){
+          if (!isReviewRemovedFromProfessor) {
             userResult = await userData.addReviewToUser(userId, reviewId);
             if (userResult?.modifiedCount)
-              isReviewAddedToUserOnFailure = userResult.modifiedCount > 0? true: false;
+              isReviewAddedToUserOnFailure =
+                userResult.modifiedCount > 0 ? true : false;
           }
         }
       }
@@ -315,10 +323,10 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
   } catch (err) {
     console.error(`${__filename} - removeReviewFromProfessor()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("removeReviewFromProfessor() :: services :: end");
     // console.log(isReviewRemovedFromProfessor, isReviewAddedToUserOnFailure);
-  return (isReviewRemovedFromProfessor && !isReviewAddedToUserOnFailure);
+    return isReviewRemovedFromProfessor && !isReviewAddedToUserOnFailure;
   }
 };
 
@@ -341,8 +349,8 @@ const addCommentToReview = async (
   let isCommentAddedToUser = false;
   try {
     const user = await userData.getUsersById(userId);
-    if(Array.isArray(user)){
-      if(user.length > 0){
+    if (Array.isArray(user)) {
+      if (user.length > 0) {
         const {
           result: schoolResult,
           id: commentId,
@@ -356,13 +364,19 @@ const addCommentToReview = async (
         );
         // console.log(">>>>", commentId);
         if (schoolResult?.modifiedCount)
-          isCommentAddedToReview = schoolResult.modifiedCount > 0 ? true : false;
+          isCommentAddedToReview =
+            schoolResult.modifiedCount > 0 ? true : false;
         if (isCommentAddedToReview) {
           let userResult = await userData.addCommentToUser(userId, commentId);
           if (userResult?.modifiedCount)
             isCommentAddedToUser = userResult.modifiedCount > 0 ? true : false;
-          if(!isCommentAddedToUser){
-            isCommentRemovedFromReview = removeCommentFromReview(schoolId, professorId, reviewId, commentId);
+          if (!isCommentAddedToUser) {
+            isCommentRemovedFromReview = removeCommentFromReview(
+              schoolId,
+              professorId,
+              reviewId,
+              commentId
+            );
           }
         }
       }
@@ -370,9 +384,9 @@ const addCommentToReview = async (
   } catch (err) {
     console.error(`${__filename} - addCommentToReview()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("addCommentToReview() :: services :: end");
-  return isCommentAddedToUser;
+    return isCommentAddedToUser;
   }
 };
 
@@ -396,12 +410,16 @@ const removeCommentFromReview = async (
   try {
     const user = await userData.getUsersById(userId);
     // console.log(user);
-    if(Array.isArray(user)){
-      if(user.length > 0){
-        let userResult = await userData.deleteCommentFromUser(userId, commentId);
+    if (Array.isArray(user)) {
+      if (user.length > 0) {
+        let userResult = await userData.deleteCommentFromUser(
+          userId,
+          commentId
+        );
         if (userResult?.modifiedCount)
-          isCommentRemovedFromUser = userResult.modifiedCount > 0 ? true : false;
-        if(isCommentRemovedFromUser){
+          isCommentRemovedFromUser =
+            userResult.modifiedCount > 0 ? true : false;
+        if (isCommentRemovedFromUser) {
           const schoolResult = await schoolData.removeCommentFromReview(
             schoolId,
             professorId,
@@ -410,12 +428,14 @@ const removeCommentFromReview = async (
           );
           // console.log(schoolResult);
           if (schoolResult?.modifiedCount)
-          isCommentRemovedFromReview = schoolResult.modifiedCount > 0 ? true : false;
+            isCommentRemovedFromReview =
+              schoolResult.modifiedCount > 0 ? true : false;
         }
         if (!isCommentRemovedFromReview) {
           const userResult = await userData.addCommentToUser(userId, commentId);
-          if(userResult?.modifiedCount){
-            isCommentAddedToUserOnFailure = userResult.modifiedCount > 0 ? true : false;
+          if (userResult?.modifiedCount) {
+            isCommentAddedToUserOnFailure =
+              userResult.modifiedCount > 0 ? true : false;
           }
         }
       }
@@ -423,9 +443,9 @@ const removeCommentFromReview = async (
   } catch (err) {
     console.error(`${__filename} - removeCommentFromReview()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("removeCommentFromReview() :: services :: end");
-  return (isCommentRemovedFromReview && !isCommentAddedToUserOnFailure);
+    return isCommentRemovedFromReview && !isCommentAddedToUserOnFailure;
   }
 };
 
