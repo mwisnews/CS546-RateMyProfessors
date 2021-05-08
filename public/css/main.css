@@ -26,3 +26,22 @@
 .container-fluid {
   padding: 15px;
 }
+
+a {
+  font-size: 16px;
+}
+
+.schools .school-results-header,
+.schools .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schools .school-link {
+  flex: 1 1 auto;
+}
+
+.schools .location {
+  min-width: 200px;
+}
