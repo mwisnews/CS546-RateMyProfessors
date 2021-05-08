@@ -9,7 +9,7 @@ The repository for our CS-546 final project.
 - Karan Shah
 - Matthew Wisnewski
 
-## Instructions
+## Instructions:
 
 ```
 npm install
