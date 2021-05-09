@@ -17,44 +17,31 @@ router.post("/newSchool", async (req, res) => {
   const schoolCity = req.body.schoolCity;
   const schoolState = req.body.schoolState;
   const schoolZipCode = req.body.schoolZipCode;
-
-  console.log(schoolName);
-  console.log(educationLevel);
-  console.log(schoolCity);
-  console.log(schoolState);
-  console.log(schoolZipCode);
-  console.log(req);
+  const userID = req.session.user._id;
 
   //TODO: WHEN IMPLEMENTING CLIENT-SIDE JS MAKE SURE TO CONFIRM PASSWORD 1 = PASSWORD 2
-  /*
+
   try {
-    const addedUserStatus = await userService.addUser(
-      firstName,
-      lastName,
-      password,
-      email,
-      dateJoined
+    const addedSchoolStatus = await schoolService.addSchool(
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      userID
     );
 
-    if (addedUserStatus.isInserted === true) {
-      res.redirect("/login");
+    if (addedSchoolStatus === true) {
+      res.redirect("/");
     } else {
-      if (addedUserStatus.alreadyExists === true) {
-        res.render("pages/newUser", {
-          title: "Sign Up",
-          error: true,
-          alreadyExists: true,
-        });
-      }
       throw new Error();
     }
   } catch (err) {
-    res.status(401).render("pages/newUser", {
-      title: "New User",
+    res.status(401).render("pages/schoolAddition", {
+      title: "Add a School",
       error: true,
     });
   }
-  */
 });
 
 router.get("/", async (req, res) => {
