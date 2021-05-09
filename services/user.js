@@ -23,7 +23,7 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
     );
     if (result == false) alreadyExists = true;
     else {
-      if(result?.insertedCount){
+      if (result?.insertedCount) {
         isInserted = result.insertedCount != 0 ? true : false;
         userId = result.insertedCount != 0 ? result.insertedId : null;
       }
@@ -36,7 +36,7 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
     return {
       isInserted,
       userId,
-      alreadyExists
+      alreadyExists,
     };
   }
 };
@@ -48,11 +48,11 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
  *         false - unsuccessful
  */
 const removeUser = async (id) => {
-    console.info("removeUser() :: services :: start");
+  console.info("removeUser() :: services :: start");
   let isDeleted = false;
   try {
     const result = await userData.removeUser(id);
-    if(result?.deletedCount)
+    if (result?.deletedCount)
       isDeleted = result.deletedCount > 0 ? true : false;
   } catch (err) {
     console.error(`${__filename} - removeUser()`);
@@ -86,20 +86,20 @@ const getUsersById = async (userIds) => {
 /*
  * checkLogin() - user authentication
  * input: userId, password - string user id or array of strings of user ids
- * output: 1 - success
+ * output: user - success
  *         0 - username not found
  *         -1 - incorrect password
  *         -9 - db error
  */
 const checkLogin = async (userId, password) => {
-    console.info("checkLogin() :: services :: start");
-    let result = -9;
+  console.info("checkLogin() :: services :: start");
+  let result = -9;
   try {
     result = await userData.checkLogin(userId, password);
   } catch (err) {
     console.error(`${__filename} - checkLogin()`);
     console.error(err);
-  } finally{
+  } finally {
     console.info("checkLogin() :: services :: end");
     return result;
   }
@@ -109,5 +109,5 @@ module.exports = {
   addUser,
   removeUser,
   getUsersById,
-  checkLogin
+  checkLogin,
 };

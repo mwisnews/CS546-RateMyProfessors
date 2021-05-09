@@ -1,5 +1,5 @@
 const mongodbConnection = require("../config/mongoConnection");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const ObjectID = require("mongodb").ObjectID;
 const _collection = "Users";
@@ -13,7 +13,7 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
       lastName: lastName.toUpperCase(),
       password: hashedPassword,
       email: email.toUpperCase(),
-      dateJoined
+      dateJoined,
     };
     const db = await mongodbConnection.getDB();
     const [result] = await db
@@ -71,7 +71,7 @@ const checkLogin = async (email, password) => {
     if (user) {
       if (user?.email.toUpperCase() == email.toUpperCase()) {
         // const hashedPassword = bcrypt.hashSync(password, saltRounds);
-        if (bcrypt.compareSync(password, user.password)) return 1;
+        if (bcrypt.compareSync(password, user.password)) return user;
         // correct login
         else return -1; // incorrect password
       }
@@ -91,7 +91,7 @@ const addReviewToUser = async (userId, reviewId) => {
       .collection(_collection)
       .updateOne(
         { _id: ObjectID(userId) },
-        { $addToSet: { "reviewsMade": ObjectID(reviewId) } }
+        { $addToSet: { reviewsMade: ObjectID(reviewId) } }
       );
   } catch (err) {
     throw err;
@@ -105,7 +105,7 @@ const deleteReviewFromUser = async (userId, reviewId) => {
       .collection(_collection)
       .updateOne(
         { _id: ObjectID(userId) },
-        { $pull: { "reviewsMade": ObjectID(reviewId) } }
+        { $pull: { reviewsMade: ObjectID(reviewId) } }
       );
   } catch (err) {
     throw err;
@@ -291,5 +291,5 @@ module.exports = {
   getUserIdWhoAddedSchoolId,
   addCommentToUser,
   deleteCommentFromUser,
-  getAllCommentsLeftByUsers
+  getAllCommentsLeftByUsers,
 };
