@@ -7,39 +7,48 @@
     <form method="POST" id="newUserForm">
         <div class="form-group">
             <label for="firstNameBox">Please enter your first name</label>
-            <input type="text" name="firstNameBox" id="firstNameBox" placeholder="First Name"
+            <input type="text" name="firstName" id="firstNameBox" placeholder="First Name"
                 class="form-control" required>
         </div>
 
         <div class="form-group">
             <label for="lastNameBox">Please enter your last name</label>
-            <input type="text" name="lastNameBox" id="lastNameBox" placeholder="Last Name"
+            <input type="text" name="lastName" id="lastNameBox" placeholder="Last Name"
                 class="form-control" required>
         </div>
 
         <div class="form-group">
             <label for="emailBox">Please enter your email</label>
-            <input type="email" name="emailBox" id="emailBox" placeholder="Email" class="form-control"
+            <input type="email" name="email" id="emailBox" placeholder="Email" class="form-control"
                 required>
         </div>
 
         <div class="form-group">
             <label for="passwordBox1">Please enter a password</label>
-            <input type="password" name="passwordBox1" id="passwordBox1" placeholder="Password"
+            <input type="password" name="password" id="passwordBox1" placeholder="Password"
                 class="form-control" required>
         </div>
 
         <div class="form-group">
             <label for="passwordBox2">Please re-enter your password</label>
-            <input type="password" name="passwordBox2" id="passwordBox2" placeholder="Confirm Password"
+            <input type="password" name="passwordConfirm" id="passwordBox2" placeholder="Confirm Password"
                 class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="cityBox">Please enter your city</label>
-            <input type="text" name="cityBox" id="cityBox" placeholder="City" class="form-control" required>
-        </div>
-
         <button id="newUserSubmitBtn" type="submit" class="btn btn-primary">Register</button>
+
+        {{#if error}}
+            {{#if alreadyExists}}
+            <p class="alreadyExistsError">
+                Email is already linked to an account
+            </p>
+            {{/if}}
+             {{#if notMatchingPasswords}}
+            <p class="notMatchingPasswords">
+                Passwords provided do not match
+            </p>
+            {{/if}}
+        {{/if}}
     </form>
 </div>
+
