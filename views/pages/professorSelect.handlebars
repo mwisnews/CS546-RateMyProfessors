@@ -1,0 +1,32 @@
+<div class="professors">
+  <h2>
+    {{schoolName}}
+  </h2>
+
+  <form method="POST" action="/professors">
+    <div class="form-group">
+      <label for="professorName">Enter the name of a professor</label>
+      <input type="text" name="professorName" id="professorName" placeholder="Professor Name" class="form-control"
+        value="{{ professorName }}">
+    </div>
+
+    <button id="professorSearchBtn" class="btn btn-primary" type="submit">Search</button>
+  </form>
+
+  <div class="professor-results-header">
+    <h3>{{professors.length}} Professors</h3>
+    <a href="/professors/newProfessor">Add a professor!</a>
+  </div>
+
+  <ul class="list-group">
+    {{#each professors}}
+    <li class="list-group-item">
+      <a href="/professors/{{this._id}}" class="professor-link">
+        {{this.lastName}}, {{this.firstName}}
+      </a>
+      <span class="location">{{this.overallRating}} Rating, {{this.numberOfReviews}} Reviews</span>
+    </li>
+    {{/each}}
+  </ul>
+
+</div>

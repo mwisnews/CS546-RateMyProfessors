@@ -38,6 +38,13 @@ a {
   align-items: center;
 }
 
+.professors .professor-results-header,
+.professors .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .schools .school-link {
   flex: 1 1 auto;
 }
