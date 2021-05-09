@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => res.redirect("/login"));
 
 router.get("/login", async (req, res) => {
-  if (req.session.authenticated) {
+  if (req.session.user) {
     // user is already logged in, let's redirect them to
     // the schools page
     res.redirect("/schools");
@@ -22,7 +22,7 @@ router.get("/login", async (req, res) => {
 });
 
 router.get("/newUser", async (req, res) => {
-  if (req.session.authenticated) {
+  if (req.session.user) {
     // user is already logged in, let's redirect them to
     // the schools page
     res.redirect("/schools");
@@ -42,13 +42,10 @@ router.post("/login", async (req, res) => {
   const password = req.body.password;
 
   try {
-    const authenticationStatus = await userService.checkLogin(
-      username,
-      password
-    );
+    const result = await userService.checkLogin(username, password);
 
-    if (authenticationStatus === 1) {
-      req.session.authenticated = true;
+    if (typeof result === "object") {
+      req.session.user = result;
       res.redirect("/schools");
     } else {
       throw new Error();
@@ -64,7 +61,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.use(async (req, res, next) => {
-  if (!req.session.authenticated) {
+  if (!req.session.user) {
     res.redirect("/login");
   } else {
     next();
