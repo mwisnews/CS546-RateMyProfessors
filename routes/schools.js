@@ -1,6 +1,7 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const { schoolService } = require("../services");
+const professorRoutes = require("./professors");
 
 router.get("/newSchool", async (req, res) => {
   try {
@@ -81,22 +82,6 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    let schoolInfo = await schoolService.getSchoolsById(req.params.id);
-    console.log(schoolInfo);
-    req.session.currentSchoolId = req.params.id;
-    console.log(schoolInfo[0].professors);
-    res.render("pages/professorSelect", {
-      schoolName: "Professors at " + schoolInfo[0].name,
-      title: "Professors",
-      schoolId: req.params.id,
-      professors: schoolInfo[0].professors,
-    });
-  } catch (e) {
-    res.status(404);
-    console.log(e);
-  }
-});
+router.use("/:schoolId", professorRoutes);
 
 module.exports = router;

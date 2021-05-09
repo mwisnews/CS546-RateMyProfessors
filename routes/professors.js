@@ -1,6 +1,24 @@
 const express = require("express");
-const router = express.Router();
 const { schoolService } = require("../services");
+const router = express.Router({ mergeParams: true });
+
+router.get("/", async (req, res) => {
+  try {
+    let schoolInfo = await schoolService.getSchoolsById(req.params.schoolId);
+    console.log(schoolInfo);
+    req.session.currentSchoolId = req.params.schoolId;
+    console.log(schoolInfo[0].professors);
+    res.render("pages/professorSelect", {
+      schoolName: "Professors at " + schoolInfo[0].name,
+      title: "Professors",
+      schoolId: req.params.schoolId,
+      professors: schoolInfo[0].professors,
+    });
+  } catch (e) {
+    res.status(404);
+    console.log(e);
+  }
+});
 
 router.get("/newProfessor", async (req, res) => {
   try {
