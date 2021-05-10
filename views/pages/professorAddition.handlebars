@@ -4,7 +4,7 @@
     <h2 id="newProfessorPrompt">Please fill out the form below and click Submit.</h2>
 </div>
 <div id="newProfessorFormDiv">
-    <form method="POST" id="newProfessorForm">
+    <form method="POST" id="newProfessorForm" action="/schools/{{schoolId}}/professors/newProfessor">
         <div class="form-group">
             <label for="professorFirstNameBox">Please enter the professor's first name</label>
             <input type="text" name="professorFirstName" id="professorFirstNameBox" placeholder="Professor's First Name"

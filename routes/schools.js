@@ -108,6 +108,6 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.use("/:schoolId", professorRoutes);
+router.use("/:schoolId/professors", professorRoutes);
 
 module.exports = router;

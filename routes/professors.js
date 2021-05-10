@@ -22,7 +22,10 @@ router.get("/", async (req, res) => {
 
 router.get("/newProfessor", async (req, res) => {
   try {
-    res.render("pages/professorAddition", { title: "Add a Professor" });
+    res.render("pages/professorAddition", {
+      title: "Add a Professor",
+      schoolId: req.params.schoolId,
+    });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -47,14 +50,17 @@ router.post("/newProfessor", async (req, res) => {
   //TODO: WHEN IMPLEMENTING CLIENT-SIDE JS MAKE SURE TO CONFIRM PASSWORD 1 = PASSWORD 2
 
   try {
-    const addedSchoolStatus = await schoolService.addProfessorToSchool(
+    const addedProfessorsStatus = await schoolService.addProfessorToSchool(
       professorFirstName,
       professorLastName,
       schoolId
     );
+    console.log(addedProfessorsStatus);
 
-    if (addedSchoolStatus === true) {
-      res.redirect("/schools/" + schoolId);
+    if (addedProfessorsStatus.isProfessorAdded === true) {
+      res.redirect(
+        "/schools/" + schoolId + "/professors/" + addedProfessorsStatus.id
+      );
     } else {
       throw new Error();
     }

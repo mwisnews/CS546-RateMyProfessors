@@ -142,21 +142,23 @@ const addProfessorToSchool = async (
 ) => {
   console.info("addProfessorToSchool() :: services :: start");
   let isProfessorAdded = false;
+  let result = null;
+  let id = null;
   try {
-    const result = await schoolData.addProfessorToSchool(
+    result = await schoolData.addProfessorToSchool(
       firstName,
       lastName,
       schoolId,
       courses
     );
-    if (result?.modifiedCount)
-      isProfessorAdded = result.modifiedCount > 0 ? true : false;
+    isProfessorAdded = result.isInserted;
+    id = result.id;
   } catch (err) {
     console.error(`${__filename} - addProfessorToSchool()`);
     console.error(err);
   } finally {
     console.info("addProfessorToSchool() :: services :: end");
-    return isProfessorAdded;
+    return { id: result.id, isProfessorAdded: isProfessorAdded };
   }
 };
 

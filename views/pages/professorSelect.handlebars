@@ -3,7 +3,7 @@
     {{schoolName}}
   </h2>
 
-  <form method="POST" action="/professors">
+  <form method="POST" action="/schools/{{schoolId}}/professors/">
     <div class="form-group">
       <label for="professorName">Enter the name of a professor</label>
       <input type="text" name="professorName" id="professorName" placeholder="Professor Name" class="form-control"
@@ -15,13 +15,13 @@
 
   <div class="professor-results-header">
     <h3>{{professors.length}} Professors</h3>
-    <a href="/professors/newProfessor">Add a professor!</a>
+    <a href="/schools/{{schoolId}}/professors/newProfessor">Add a professor!</a>
   </div>
 
   <ul class="list-group">
     {{#each professors}}
     <li class="list-group-item">
-      <a href="/professors/{{this._id}}" class="professor-link">
+      <a href="/schools/{{schoolId}}/professors/{{this._id}}" class="professor-link">
         {{this.lastName}}, {{this.firstName}}
       </a>
       <span class="location">{{this.overallRating}} Rating, {{this.numberOfReviews}} Reviews</span>
