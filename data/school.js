@@ -88,8 +88,9 @@ const addProfessorToSchool = async (
   courses = []
 ) => {
   try {
+    const _id = new ObjectID();
     const professorDocument = {
-      _id: new ObjectID(),
+      _id,
       firstName,
       lastName,
       schoolId,
@@ -98,12 +99,14 @@ const addProfessorToSchool = async (
       numberOfReviews: 0,
     };
     const db = await mongodbConnection.getDB();
-    return await db
+    let result = await db
       .collection(_collection)
       .updateOne(
         { _id: ObjectID(schoolId) },
         { $addToSet: { professors: professorDocument } }
       );
+    console.log(result);
+    return { id: _id, isInserted: result.modifiedCount > 0 ? true : false };
   } catch (err) {
     throw err;
   }
