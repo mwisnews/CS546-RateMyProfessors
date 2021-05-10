@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const { schoolService } = require("../services");
 const professorRoutes = require("./professors");
+const validation = require("../Validation/schoolServices");
+
+const trim = (str) => (str || "").trim();
 
 router.get("/newSchool", async (req, res) => {
   try {
@@ -13,17 +16,37 @@ router.get("/newSchool", async (req, res) => {
 });
 
 router.post("/newSchool", async (req, res) => {
-  const schoolName = req.body.schoolName;
-  const educationLevel = req.body.educationLevel;
-  const schoolCity = req.body.schoolCity;
-  const schoolState = req.body.schoolState;
-  const schoolZipCode = req.body.schoolZipCode;
+  const schoolName = trim(req.body.schoolName);
+  const educationLevel = trim(req.body.educationLevel);
+  const schoolCity = trim(req.body.schoolCity);
+  const schoolState = trim(req.body.schoolState);
+  const schoolZipCode = trim(req.body.schoolZipCode);
   const userID = req.session.user._id;
 
-  //TODO: WHEN IMPLEMENTING CLIENT-SIDE JS MAKE SURE TO CONFIRM PASSWORD 1 = PASSWORD 2
+  try {
+    validation.addSchool(
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      userID
+    );
+  } catch (errorArr) {
+    res.status(400).render("pages/schoolAddition", {
+      title: "Add a School",
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      error: errorArr.join(", "),
+    });
+    return;
+  }
 
   try {
-    const addedSchoolStatus = await schoolService.addSchool(
+    const { insertedId, duplicateSchool } = await schoolService.addSchool(
       schoolName,
       educationLevel,
       schoolCity,
@@ -32,15 +55,18 @@ router.post("/newSchool", async (req, res) => {
       userID
     );
 
-    if (addedSchoolStatus === true) {
-      res.redirect("/");
-    } else {
-      throw new Error();
-    }
-  } catch (err) {
-    res.status(401).render("pages/schoolAddition", {
+    if (duplicateSchool) throw ["School already exists"];
+
+    res.redirect(`/schools/${insertedId}`);
+  } catch (errorArr) {
+    res.status(400).render("pages/schoolAddition", {
       title: "Add a School",
-      error: true,
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      error: errorArr.join(", "),
     });
   }
 });

@@ -18,8 +18,11 @@ const addSchool = async (
   addedBy
 ) => {
   console.info("addSchool() :: services :: start");
+
   let isSchoolInserted = false;
   let isSchoolAddedToUser = false;
+  let insertedId = null;
+  let duplicateSchool = false;
   try {
     const result = await schoolData.addSchool(
       name,
@@ -32,7 +35,7 @@ const addSchool = async (
     if (result?.insertedCount) {
       isSchoolInserted = result.insertedCount > 0 ? true : false;
       if (isSchoolInserted && result?.insertedId) {
-        let insertedId = result.insertedId;
+        insertedId = result.insertedId;
         const schoolAdded = await userData.addSchoolToUser(addedBy, insertedId);
         if (schoolAdded?.modifiedCount)
           isSchoolAddedToUser = schoolAdded.modifiedCount > 0 ? true : false;
@@ -41,9 +44,10 @@ const addSchool = async (
   } catch (err) {
     console.error(`${__filename} - addSchool()`);
     console.error(err);
+    duplicateSchool = true;
   } finally {
     console.info("addSchool() :: services :: end");
-    return isSchoolAddedToUser;
+    return { isSchoolAddedToUser, insertedId, duplicateSchool };
   }
 };
 

@@ -1,6 +1,6 @@
 const mongodbConnection = require("../config/mongoConnection");
 const ObjectID = require("mongodb").ObjectID;
-
+const validation = require("../Validation/schoolData");
 const _collection = "Schools";
 
 const addSchool = async (
@@ -11,6 +11,16 @@ const addSchool = async (
   zipcode,
   addedBy
 ) => {
+  validation.addSchool(name, educationLevel, city, state, zipcode, addedBy);
+
+  const db = await mongodbConnection.getDB();
+
+  const existingSchool = await db
+    .collection(_collection)
+    .findOne({ name: { $regex: name, $options: "i" } });
+
+  if (existingSchool) throw ["School already exists"];
+
   try {
     const schoolDocument = {
       name,
@@ -20,10 +30,9 @@ const addSchool = async (
       zipcode,
       addedBy: ObjectID(addedBy),
     };
-    const db = await mongodbConnection.getDB();
     return await db.collection(_collection).insertOne(schoolDocument);
   } catch (err) {
-    throw err;
+    throw [err.toString()];
   }
 };
 
@@ -195,34 +204,36 @@ const addReviewToProfessor = async (
       ])
       .project({ _id: 0, "professors.reviews.rating": 1 })
       .toArray();
-      // console.log(">>>", ratings);
-      let sum = 0;
-      let avg_rating = rating;
-      if(ratings?.professors?.reviews){
-        ratings = ratings.professors.reviews;
-        if(Array.isArray(ratings)){
-            if (ratings.length > 0) {
-            ratings.forEach((data) => {
-                sum += data.rating;
-            });
-            avg_rating = Number(((sum + rating) / (ratings.length + 1)).toFixed(1));
-            }
-            // console.log(avg_rating)
+    // console.log(">>>", ratings);
+    let sum = 0;
+    let avg_rating = rating;
+    if (ratings?.professors?.reviews) {
+      ratings = ratings.professors.reviews;
+      if (Array.isArray(ratings)) {
+        if (ratings.length > 0) {
+          ratings.forEach((data) => {
+            sum += data.rating;
+          });
+          avg_rating = Number(
+            ((sum + rating) / (ratings.length + 1)).toFixed(1)
+          );
         }
+        // console.log(avg_rating)
       }
-      result = await db.collection(_collection).updateOne(
-        {
-          _id: ObjectID(schoolId),
-          "professors._id": ObjectID(professorId),
+    }
+    result = await db.collection(_collection).updateOne(
+      {
+        _id: ObjectID(schoolId),
+        "professors._id": ObjectID(professorId),
+      },
+      {
+        $set: { "professors.$.overallRating": avg_rating },
+        $addToSet: {
+          "professors.$.reviews": reviewDocument,
         },
-        {
-          $set: { "professors.$.overallRating": avg_rating },
-          $addToSet: {
-            "professors.$.reviews": reviewDocument,
-          },
-          $inc: { "professors.$.numberOfReviews": 1 },
-        }
-      );
+        $inc: { "professors.$.numberOfReviews": 1 },
+      }
+    );
     // console.log("<<<<<", result);
     return { result, id: id.toString() };
   } catch (err) {
@@ -233,24 +244,24 @@ const addReviewToProfessor = async (
 const removeReviewFromProfessor = async (professorId, reviewId) => {
   try {
     const db = await mongodbConnection.getDB();
-        let [ratings] = await db
-        .collection(_collection)
-        .aggregate([
-          { $unwind: { path: "$professors" } },
-          // {$unwind: {path: "$professors.reviews"}},
-          { $match: { "professors._id": ObjectID(professorId) } },
-        ])
-        .project({
-          _id: 0,
-          "professors.reviews.rating": 1,
-          "professors.reviews._id": 1,
-        })
-        .toArray();
-        let sum = 0;
-        let avg_rating = 0;
-        let reviewIdFound = false;
-      if(ratings?.professors){
-        ratings = ratings.professors.reviews;
+    let [ratings] = await db
+      .collection(_collection)
+      .aggregate([
+        { $unwind: { path: "$professors" } },
+        // {$unwind: {path: "$professors.reviews"}},
+        { $match: { "professors._id": ObjectID(professorId) } },
+      ])
+      .project({
+        _id: 0,
+        "professors.reviews.rating": 1,
+        "professors.reviews._id": 1,
+      })
+      .toArray();
+    let sum = 0;
+    let avg_rating = 0;
+    let reviewIdFound = false;
+    if (ratings?.professors) {
+      ratings = ratings.professors.reviews;
       // console.log(ratings);
       if (ratings.length > 0) {
         ratings.forEach((data) => {
@@ -260,33 +271,29 @@ const removeReviewFromProfessor = async (professorId, reviewId) => {
             sum += data.rating;
           }
         });
-        if (reviewIdFound){
-          if(ratings.length > 1)
+        if (reviewIdFound) {
+          if (ratings.length > 1)
             avg_rating = Number((sum / (ratings.length - 1)).toFixed(1));
-          else
-            avg_rating = 0;
-        }else avg_rating = Number((sum / ratings.length).toFixed(1));
+          else avg_rating = 0;
+        } else avg_rating = Number((sum / ratings.length).toFixed(1));
       }
     }
-      // console.log(avg_rating);
-      if(reviewIdFound){
-        return await db.collection(_collection).updateOne(
-          {
-            // "_id": ObjectID(schoolId),
-            "professors._id": ObjectID(professorId),
+    // console.log(avg_rating);
+    if (reviewIdFound) {
+      return await db.collection(_collection).updateOne(
+        {
+          // "_id": ObjectID(schoolId),
+          "professors._id": ObjectID(professorId),
+        },
+        {
+          $set: { "professors.$.overallRating": avg_rating },
+          $pull: {
+            "professors.$.reviews": { _id: ObjectID(reviewId) },
           },
-          {
-            $set: { "professors.$.overallRating": avg_rating },
-            $pull: {
-              "professors.$.reviews": { _id: ObjectID(reviewId) },
-            },
-            $inc: { "professors.$.numberOfReviews": -1 },
-          }
-        );
+          $inc: { "professors.$.numberOfReviews": -1 },
         }
-      else
-          return null;
-    
+      );
+    } else return null;
   } catch (err) {
     throw err;
   }
