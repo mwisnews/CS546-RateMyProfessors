@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const { schoolService } = require("../services");
 const professorRoutes = require("./professors");
+const validation = require("../Validation/schoolServices");
 
 router.get("/newSchool", async (req, res) => {
   try {
@@ -20,7 +21,27 @@ router.post("/newSchool", async (req, res) => {
   const schoolZipCode = req.body.schoolZipCode;
   const userID = req.session.user._id;
 
-  //TODO: WHEN IMPLEMENTING CLIENT-SIDE JS MAKE SURE TO CONFIRM PASSWORD 1 = PASSWORD 2
+  try {
+    validation.addSchool(
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      userID
+    );
+  } catch (errorArr) {
+    res.status(400).render("pages/schoolAddition", {
+      title: "Add a School",
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      error: errorArr.join(", "),
+    });
+    return;
+  }
 
   try {
     const addedSchoolStatus = await schoolService.addSchool(
@@ -38,9 +59,14 @@ router.post("/newSchool", async (req, res) => {
       throw new Error();
     }
   } catch (err) {
-    res.status(401).render("pages/schoolAddition", {
+    res.status(500).render("pages/schoolAddition", {
       title: "Add a School",
-      error: true,
+      schoolName,
+      educationLevel,
+      schoolCity,
+      schoolState,
+      schoolZipCode,
+      error: "School could not be added",
     });
   }
 });
