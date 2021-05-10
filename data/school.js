@@ -17,7 +17,7 @@ const addSchool = async (
 
   const existingSchool = await db
     .collection(_collection)
-    .findOne({ name: { $regex: name, $options: "i" } });
+    .findOne({ name: { $regex: `^${name}$`, $options: "i" } });
 
   if (existingSchool) throw ["School already exists"];
 

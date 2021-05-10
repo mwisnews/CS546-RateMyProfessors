@@ -57,7 +57,7 @@ router.post("/newSchool", async (req, res) => {
 
     if (duplicateSchool) throw ["School already exists"];
 
-    res.redirect(`/schools/${insertedId}`);
+    res.redirect(`/schools/${insertedId}/professors`);
   } catch (errorArr) {
     res.status(400).render("pages/schoolAddition", {
       title: "Add a School",
