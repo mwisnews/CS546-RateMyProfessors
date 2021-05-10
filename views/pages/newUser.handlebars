@@ -7,48 +7,38 @@
     <form method="POST" id="newUserForm">
         <div class="form-group">
             <label for="firstNameBox">Please enter your first name</label>
-            <input type="text" name="firstName" id="firstNameBox" placeholder="First Name"
-                class="form-control" required>
+            <input type="text" name="firstName" id="firstNameBox" placeholder="First Name" class="form-control" required
+                value="{{firstName}}">
         </div>
 
         <div class="form-group">
             <label for="lastNameBox">Please enter your last name</label>
-            <input type="text" name="lastName" id="lastNameBox" placeholder="Last Name"
-                class="form-control" required>
+            <input type="text" name="lastName" id="lastNameBox" placeholder="Last Name" class="form-control" required
+                value="{{lastName}}">
         </div>
 
         <div class="form-group">
             <label for="emailBox">Please enter your email</label>
-            <input type="email" name="email" id="emailBox" placeholder="Email" class="form-control"
-                required>
+            <input type="email" name="email" id="emailBox" placeholder="Email" class="form-control" required
+                value="{{email}}">
         </div>
 
         <div class="form-group">
             <label for="passwordBox1">Please enter a password</label>
-            <input type="password" name="password" id="passwordBox1" placeholder="Password"
-                class="form-control" required>
+            <input type="password" name="password" id="passwordBox1" placeholder="Password" class="form-control"
+                required value="{{password}}">
         </div>
 
         <div class="form-group">
             <label for="passwordBox2">Please re-enter your password</label>
             <input type="password" name="passwordConfirm" id="passwordBox2" placeholder="Confirm Password"
-                class="form-control" required>
+                class="form-control" required value="{{passwordConfirm}}">
         </div>
 
         <button id="newUserSubmitBtn" type="submit" class="btn btn-primary">Register</button>
 
-        {{#if error}}
-            {{#if alreadyExists}}
-            <p class="alreadyExistsError">
-                Email is already linked to an account
-            </p>
-            {{/if}}
-             {{#if notMatchingPasswords}}
-            <p class="notMatchingPasswords">
-                Passwords provided do not match
-            </p>
-            {{/if}}
-        {{/if}}
+        <p class="error">{{error}}</p>
     </form>
 </div>
 
+<script src="/public/js/new-user.js"></script>

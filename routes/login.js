@@ -1,6 +1,6 @@
 const express = require("express");
 const { userService } = require("../services");
-
+const validation = require("../Validation/userServices");
 const router = express.Router();
 
 router.get("/", async (req, res) => res.redirect("/login"));
@@ -68,14 +68,19 @@ router.post("/newUser", async (req, res) => {
   const passwordConfirm = req.body.passwordConfirm;
   const dateJoined = new Date();
 
-  //TODO: WHEN IMPLEMENTING CLIENT-SIDE JS MAKE SURE TO CONFIRM PASSWORD 1 = PASSWORD 2
-
-  if (password !== passwordConfirm) {
+  try {
+    validation.addUser(firstName, lastName, email, password, passwordConfirm);
+  } catch (errorArr) {
     res.status(400).render("pages/newUser", {
       title: "Sign Up",
-      error: true,
-      notMatchingPasswords: true,
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirm,
+      error: errorArr.join(", "),
     });
+    return;
   }
 
   try {
@@ -88,21 +93,35 @@ router.post("/newUser", async (req, res) => {
     );
 
     if (addedUserStatus.isInserted === true) {
-      res.redirect("/login");
+      const user = await userService.checkLogin(email, password);
+      req.session.user = user;
+      res.redirect("/schools");
+      return;
     } else {
       if (addedUserStatus.alreadyExists === true) {
         res.render("pages/newUser", {
           title: "Sign Up",
-          error: true,
-          alreadyExists: true,
+          firstName,
+          lastName,
+          email,
+          password,
+          passwordConfirm,
+          error: "Email is already linked to an account",
         });
+        return;
       }
       throw new Error();
     }
   } catch (err) {
-    res.status(401).render("pages/newUser", {
+    res.status(500).render("pages/newUser", {
       title: "New User",
-      error: true,
+      title: "Sign Up",
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirm,
+      error: "An error has occurred. Account not created",
     });
   }
 });
