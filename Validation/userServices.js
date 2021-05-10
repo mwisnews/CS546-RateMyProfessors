@@ -9,17 +9,18 @@ const isValidIds = (userIds) =>
   userIds && Array.isArray(userIds) && userIds.length;
 const isValidObjectId = (id) => ObjectId(id);
 
-const addUser = (firstName, lastName, password, email) => {
+const addUser = (firstName, lastName, email, password, passwordConfirm) => {
   console.log("addUser() Validation Start");
   const errors = [];
   if (!isNonEmptyString(firstName))
     errors.push("First Name must be a non-empty string!");
   if (!isNonEmptyString(lastName))
     errors.push("Last Name must be a non-empty string!");
-  if (!isNonEmptyString(password))
-    errors.push("Password must be a non-empty string!");
   if (!isValidEmail(email))
     errors.push("You have entered an invalid email address!");
+  if (!isNonEmptyString(password))
+    errors.push("Password must be a non-empty string!");
+  if (password !== passwordConfirm) errors.push("Passwords do not match!");
   if (errors.length) throw errors;
   console.log("addUser() Validation End");
 };
