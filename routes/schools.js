@@ -4,6 +4,8 @@ const { schoolService } = require("../services");
 const professorRoutes = require("./professors");
 const validation = require("../Validation/schoolServices");
 
+const trim = (str) => (str || "").trim();
+
 router.get("/newSchool", async (req, res) => {
   try {
     res.render("pages/schoolAddition", { title: "Add a School" });
@@ -14,11 +16,11 @@ router.get("/newSchool", async (req, res) => {
 });
 
 router.post("/newSchool", async (req, res) => {
-  const schoolName = req.body.schoolName;
-  const educationLevel = req.body.educationLevel;
-  const schoolCity = req.body.schoolCity;
-  const schoolState = req.body.schoolState;
-  const schoolZipCode = req.body.schoolZipCode;
+  const schoolName = trim(req.body.schoolName);
+  const educationLevel = trim(req.body.educationLevel);
+  const schoolCity = trim(req.body.schoolCity);
+  const schoolState = trim(req.body.schoolState);
+  const schoolZipCode = trim(req.body.schoolZipCode);
   const userID = req.session.user._id;
 
   try {
@@ -44,7 +46,7 @@ router.post("/newSchool", async (req, res) => {
   }
 
   try {
-    const addedSchoolStatus = await schoolService.addSchool(
+    const { insertedId, duplicateSchool } = await schoolService.addSchool(
       schoolName,
       educationLevel,
       schoolCity,
@@ -53,20 +55,18 @@ router.post("/newSchool", async (req, res) => {
       userID
     );
 
-    if (addedSchoolStatus === true) {
-      res.redirect("/");
-    } else {
-      throw new Error();
-    }
-  } catch (err) {
-    res.status(500).render("pages/schoolAddition", {
+    if (duplicateSchool) throw ["School already exists"];
+
+    res.redirect(`/schools/${insertedId}`);
+  } catch (errorArr) {
+    res.status(400).render("pages/schoolAddition", {
       title: "Add a School",
       schoolName,
       educationLevel,
       schoolCity,
       schoolState,
       schoolZipCode,
-      error: "School could not be added",
+      error: errorArr.join(", "),
     });
   }
 });

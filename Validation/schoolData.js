@@ -22,10 +22,9 @@ const addSchool = (name, educationLevel, city, state, zipcode, addedBy) => {
   if (!isNonEmptyString(city)) errors.push("City must be a non-empty string!");
   if (!isNonEmptyString(state))
     errors.push("State must be a non-empty string!");
-  if (!isValidZipcode(zipcode))
-    errors.push("Zipcode must be a non-empty number!");
+  if (!isNonEmptyString(zipcode))
+    errors.push("Zipcode must be a non-empty string!");
   if (!isValidId(addedBy)) errors.push("You must provide valid ID!");
-  if (!isValidObjectId(addedBy)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
   console.log("In addSchool Validation End");
 };
