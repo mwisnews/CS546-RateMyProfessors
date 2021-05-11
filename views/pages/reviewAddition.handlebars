@@ -4,28 +4,28 @@
     <h2 id="newReviewPrompt">Please fill out the review below and click Post.</h2>
 </div>
 <div id="newReviewFormDiv">
-    <form method="POST" id="newReviewForm">
+    <form method="POST" id="newReviewForm" action="/schools/{{schoolId}}/professors/{{professorId}}/createReview">
         <div class="form-group">
             <label for="reviewRatingBox">Please select your rating for the professor (0-5 scale where 5 is excellent and 0 is poor)</label>
-            <input type="number" name="reviewRatingBox" id="reviewRatingBox" placeholder="Rating of the Professor"
+            <input type="number" name="reviewRating" id="reviewRatingBox" placeholder="Rating of the Professor"
                 class="form-control" min="0" max="5" step="0.1" required>
         </div>
 
         <div class="form-group">
             <label for="reviewDifficultyBox">Please select your difficulty rating for the professor (0-5 scale where 5 is excellent and 0 is poor)</label>
-            <input type="number" name="reviewDifficultyBox" id="reviewDifficultyBox" placeholder="Difficulty Rating of the Professor"
+            <input type="number" name="reviewDifficulty" id="reviewDifficultyBox" placeholder="Difficulty Rating of the Professor"
                 class="form-control" min="0" max="5" step="0.1" required>
         </div>
 
         <div class="form-group">
             <label for="courseNameBox">Please enter the name of the course</label>
-            <input type="text" name="courseNameBox" id="courseNameBox" placeholder="Course Name"
+            <input type="text" name="courseName" id="courseNameBox" placeholder="Course Name"
                 class="form-control" required>
         </div>
 
         <div class="form-group">
             <label for="reviewTextBox">Please enter your review</label>
-            <input type="text" name="reviewTextBox" id="reviewTextBox" placeholder="Review"
+            <input type="text" name="reviewText" id="reviewTextBox" placeholder="Review"
                 class="form-control" required>
         </div>
 
