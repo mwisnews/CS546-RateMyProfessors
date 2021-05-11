@@ -2,12 +2,12 @@ const express = require("express");
 const { schoolService } = require("../services");
 const router = express.Router({ mergeParams: true });
 
+const trim = (str) => (str || "").trim();
+
 router.get("/", async (req, res) => {
   try {
     let schoolInfo = await schoolService.getSchoolsById(req.params.schoolId);
-    console.log(schoolInfo);
     req.session.currentSchoolId = req.params.schoolId;
-    console.log(schoolInfo[0].professors);
     res.render("pages/professorSelect", {
       schoolName: "Professors at " + schoolInfo[0].name,
       title: "Professors",
@@ -32,9 +32,33 @@ router.get("/newProfessor", async (req, res) => {
   }
 });
 
-router.get("/createReview", async (req, res) => {
+router.get("/:professorId", async (req, res) => {
   try {
-    res.render("pages/reviewAddition", { title: "Add a Review" });
+    let professorInfo = await schoolService.getProfessorsById(
+      req.params.professorId
+    );
+    res.render("pages/professorDetails", {
+      firstName: professorInfo[0].firstName,
+      lastName: professorInfo[0].lastName,
+      title: professorInfo[0].lastName + ", " + professorInfo[0].firstName,
+      professorId: professorInfo[0]._id,
+      schoolId: professorInfo[0].schoolId,
+    });
+  } catch (e) {
+    res.status(404);
+    console.log(e);
+  }
+});
+
+router.get("/:professorId/createReview", async (req, res) => {
+  try {
+    let professorId = req.params.professorId;
+    let schoolId = req.params.schoolId;
+    res.render("pages/reviewAddition", {
+      title: "Add a Review",
+      professorId: professorId,
+      schoolId: schoolId,
+    });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -45,9 +69,6 @@ router.post("/newProfessor", async (req, res) => {
   const professorFirstName = req.body.professorFirstName;
   const professorLastName = req.body.professorLastName;
   const schoolId = req.session.currentSchoolId;
-  console.log(schoolId);
-
-  //TODO: WHEN IMPLEMENTING CLIENT-SIDE JS MAKE SURE TO CONFIRM PASSWORD 1 = PASSWORD 2
 
   try {
     const addedProfessorsStatus = await schoolService.addProfessorToSchool(
@@ -67,6 +88,44 @@ router.post("/newProfessor", async (req, res) => {
   } catch (err) {
     res.status(401).render("pages/ProfessorAddition", {
       title: "Add a School",
+      error: true,
+    });
+  }
+});
+
+router.post("/:professorId/createReview", async (req, res) => {
+  const professorId = req.params.professorId;
+  const schoolId = req.params.schoolId;
+  const userId = req.session.user._id;
+  try {
+    const rating = trim(req.body.reviewRating);
+    const difficulty = trim(req.body.reviewDifficulty);
+    const course = trim(req.body.courseName);
+    const review = trim(req.body.reviewText);
+    const date = new Date();
+
+    const addedReviewStatus = await schoolService.addReviewToProfessor(
+      rating,
+      difficulty,
+      course,
+      review,
+      date,
+      professorId,
+      schoolId,
+      userId
+    );
+    console.log(addedReviewStatus);
+
+    if (addedReviewStatus === true) {
+      res.redirect(`/schools/${schoolId}/professors/${professorId}`);
+    } else {
+      throw new Error();
+    }
+  } catch (err) {
+    res.status(401).render("pages/reviewAddition", {
+      title: "Add a Review",
+      professorId: professorId,
+      schoolId: schoolId,
       error: true,
     });
   }
