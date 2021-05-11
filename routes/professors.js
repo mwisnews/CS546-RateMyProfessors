@@ -16,7 +16,6 @@ router.get("/", async (req, res) => {
     });
   } catch (e) {
     res.status(404);
-    console.log(e);
   }
 });
 
@@ -27,7 +26,6 @@ router.get("/newProfessor", async (req, res) => {
       schoolId: req.params.schoolId,
     });
   } catch (e) {
-    console.log(e);
     res.sendStatus(500);
   }
 });
@@ -37,6 +35,14 @@ router.get("/:professorId", async (req, res) => {
     let professorInfo = await schoolService.getProfessorsById(
       req.params.professorId
     );
+
+    if (!professorInfo.length) {
+      res.status(404).render("pages/404", {
+        message: "Professor not found",
+      });
+      return;
+    }
+
     res.render("pages/professorDetails", {
       firstName: professorInfo[0].firstName,
       lastName: professorInfo[0].lastName,
@@ -46,7 +52,6 @@ router.get("/:professorId", async (req, res) => {
     });
   } catch (e) {
     res.status(404);
-    console.log(e);
   }
 });
 

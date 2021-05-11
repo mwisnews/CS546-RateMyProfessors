@@ -108,6 +108,21 @@ router.post("/", async (req, res) => {
   });
 });
 
+router.use("/:schoolId/professors", async (req, res, next) => {
+  try {
+    let schoolInfo = await schoolService.getSchoolsById(req.params.schoolId);
+
+    if (schoolInfo.length) {
+      next();
+      return;
+    }
+  } catch (e) {}
+
+  res.status(404).render("pages/404", {
+    message: "School not found",
+  });
+});
+
 router.use("/:schoolId/professors", professorRoutes);
 
 module.exports = router;
