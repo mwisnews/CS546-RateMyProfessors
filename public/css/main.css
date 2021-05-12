@@ -88,3 +88,8 @@ a {
 .professorDetails .thumbs-up-down form span {
   margin: 0 4px;
 }
+
+.professorDetails .commentDate {
+  font-size: small;
+  color: gray;
+}

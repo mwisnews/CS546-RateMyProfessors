@@ -37,13 +37,14 @@
       {{#each comments}}
       <ul>
         <li class="list-group-item">
+          <span class="commentDate">{{this.date}}</span>
           <span class="comment">{{this.text}}</span>
         </li>
       </ul>
       {{/each}}
       <label for="commentsField">Comments on this review:</label>
       <form method="POST" action="/schools/{{../schoolId}}/professors/{{../professorId}}/{{this._id}}">
-      <input id="commentsField" type="text" name="commentsField" placeholder="Comment" required>
+      <textarea id="commentsField" type="text" name="commentsField" placeholder="Comment" required></textarea>
       <button id="commentsSubmitBtn" class="btn btn-primary" type="submit">Submit</button>
       </form>
     </li>
