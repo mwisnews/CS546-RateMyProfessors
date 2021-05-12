@@ -42,6 +42,16 @@ router.get("/:professorId", async (req, res) => {
       });
       return;
     }
+    let averageDifficulty = 0;
+    if (professorInfo[0].reviews !== undefined) {
+      for (i = 0; i < professorInfo[0].reviews.length; i++) {
+        averageDifficulty += Number.parseFloat(
+          professorInfo[0].reviews[i].difficulty
+        );
+      }
+      averageDifficulty /= professorInfo[0].reviews.length;
+      averageDifficulty = averageDifficulty.toFixed(2).toString();
+    }
 
     res.render("pages/professorDetails", {
       firstName: professorInfo[0].firstName,
@@ -49,6 +59,10 @@ router.get("/:professorId", async (req, res) => {
       title: professorInfo[0].lastName + ", " + professorInfo[0].firstName,
       professorId: professorInfo[0]._id,
       schoolId: professorInfo[0].schoolId,
+      reviews: professorInfo[0].reviews,
+      overallRating: professorInfo[0].overallRating,
+      numberOfReviews: professorInfo[0].numberOfReviews,
+      averageDifficulty: averageDifficulty,
     });
   } catch (e) {
     res.status(404);
