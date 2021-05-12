@@ -1,6 +1,7 @@
 const express = require("express");
 const { schoolService } = require("../services");
 const router = express.Router({ mergeParams: true });
+const validation = require("../Validation/schoolServices");
 
 const trim = (str) => (str || "").trim();
 
@@ -85,9 +86,16 @@ router.get("/:professorId/createReview", async (req, res) => {
 });
 
 router.post("/newProfessor", async (req, res) => {
-  const professorFirstName = req.body.professorFirstName;
-  const professorLastName = req.body.professorLastName;
+  const professorFirstName = trim(req.body.professorFirstName);
+  const professorLastName = trim(req.body.professorLastName);
   const schoolId = req.session.currentSchoolId;
+
+  try {
+    validation.addProfessorToSchool(professorFirstName, professorLastName);
+  } catch (e) {
+    res.status(400).json({ error: e.join(", ") });
+    return;
+  }
 
   try {
     const addedProfessorsStatus = await schoolService.addProfessorToSchool(
@@ -95,20 +103,17 @@ router.post("/newProfessor", async (req, res) => {
       professorLastName,
       schoolId
     );
-    console.log(addedProfessorsStatus);
 
     if (addedProfessorsStatus.isProfessorAdded === true) {
-      res.redirect(
-        "/schools/" + schoolId + "/professors/" + addedProfessorsStatus.id
-      );
+      res.json({
+        redirect:
+          "/schools/" + schoolId + "/professors/" + addedProfessorsStatus.id,
+      });
     } else {
       throw new Error();
     }
   } catch (err) {
-    res.status(401).render("pages/ProfessorAddition", {
-      title: "Add a School",
-      error: true,
-    });
+    res.status(401).json({ error: "Could not add professor" });
   }
 });
 
