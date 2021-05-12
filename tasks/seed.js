@@ -27,7 +27,7 @@ const userService = require("../services").userService;
         console.log(
           chalk.green(`User - ${user[0]} ${user[1]} added successfully`)
         );
-        user.push(result.userId);
+        user.push(result.userId.toString());
       } else
         console.error(
           chalk.red(`User - ${user[0]} ${user[1]} could not be added`)
@@ -59,7 +59,7 @@ const userService = require("../services").userService;
 
     for (const school of schools) {
       result = await schoolService.addSchool(...school);
-      if (result)
+      if (result.insertedId)
         console.log(chalk.green(`School - ${school[0]} added successfully`));
       else console.error(chalk.red(`School - ${school[0]} could not be added`));
     }
