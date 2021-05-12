@@ -131,7 +131,8 @@ const getSchoolsById = async (schoolIds) => {
 /*
  * addProfessorToSchool() - Adds professor to Schools Collection
  * input: firstName, lastName, schoolId, courses = []
- * output: true - if professor successfully added to School
+ * output: professor Id,
+ *         true - if professor successfully added to School
  *         false - if unsuccessful
  */
 const addProfessorToSchool = async (
@@ -197,7 +198,7 @@ const getAllProfessorsFromSchool = async (schoolId) => {
   let professors = [];
   try {
     const [result] = await schoolData.getAllProfessorsFromSchool(schoolId);
-    if (result?.professor) professors = result.professors;
+    if (result?.professors) professors = result.professors;
   } catch (err) {
     console.error(`${__filename} - getAllProfessorsFromSchool()`);
     console.error(err);
@@ -337,6 +338,98 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
 };
 
 /*
+    * addThumbsUpToReview() - add thumbs up to review
+    * input: schoolId, professorId, reviewId, userId
+    * output: true - thumbs up added successfully
+              false - unsuccessful
+*/
+const addThumbsUpToReview = async (schoolId, professorId, reviewId, userId) => {
+  console.info("addThumbsUpToReview() :: services :: start");
+  isThumbsUpAddedToReview = false;
+  try{
+    let temp_result = await schoolData.removeThumbsDownFromReview(schoolId, professorId, reviewId, userId);
+    let result = await schoolData.addThumbsUpToReview(schoolId, professorId, reviewId, userId);
+    // console.log(result);
+    if(result?.modifiedCount)
+      isThumbsUpAddedToReview = result?.modifiedCount > 0? true: false;
+  }catch(err){
+    console.error(`${__filename} - addThumbsUpToReview()`);
+    console.error(err);
+  }finally{
+    console.info("addThumbsUpToReview() :: services :: end");
+    return isThumbsUpAddedToReview;
+  }
+};
+
+/*
+    * removeThumbsUpFromReview() - remove thumbs up from review
+    * input: schoolId, professorId, reviewId, userId
+    * output: true - thumbs up removed successfully
+              false - unsuccessful
+*/
+const removeThumbsUpFromReview = async (schoolId, professorId, reviewId, userId) => {
+  console.info("removeThumbsUpFromReview() :: services :: start");
+  isThumbsUpRemovedFromReview = false;
+  try{
+    let result = await schoolData.removeThumbsUpFromReview(schoolId, professorId, reviewId, userId);
+    // console.log(result);
+    if(result?.modifiedCount)
+    isThumbsUpRemovedFromReview = result?.modifiedCount > 0? true: false;
+  }catch(err){
+    console.error(`${__filename} - removeThumbsUpFromReview()`);
+    console.error(err);
+  }finally{
+    console.info("removeThumbsUpFromReview() :: services :: end");
+    return isThumbsUpRemovedFromReview;
+  }
+};
+
+/*
+    * addThumbsDownToReview() - add thumbs down to review
+    * input: schoolId, professorId, reviewId, userId
+    * output: true - thumbs down added successfully
+              false - unsuccessful
+*/
+const addThumbsDownToReview = async (schoolId, professorId, reviewId, userId) => {
+  console.info("addThumbsDownToReview() :: services :: start");
+  isThumbsDownAddedToReview = false
+  try{
+    let temp_result = await schoolData.removeThumbsUpFromReview(schoolId, professorId, reviewId, userId);
+    let result = await schoolData.addThumbsDownToReview(schoolId, professorId, reviewId, userId);
+    if(result?.modifiedCount)
+    isThumbsDownAddedToReview = result?.modifiedCount > 0? true: false;
+  }catch(err){
+    console.error(`${__filename} - addThumbsDownToReview()`);
+    console.error(err);
+  }finally{
+    console.info("addThumbsDownToReview() :: services :: end");
+    return isThumbsDownAddedToReview;
+  }
+};
+
+/*
+    * removeThumbsDownFromReview() - remove thumbs down from review
+    * input: schoolId, professorId, reviewId, userId
+    * output: true - thumbs down removed successfully
+              false - unsuccessful
+*/
+const removeThumbsDownFromReview = async (schoolId, professorId, reviewId, userId) => {
+  console.info("removeThumbsDownFromReview() :: services :: start");
+  isThumbsDownRemovedFromReview = false;
+  try{
+    let result = await schoolData.removeThumbsDownFromReview(schoolId, professorId, reviewId, userId);
+    if(result?.modifiedCount)
+    isThumbsDownRemovedFromReview = result?.modifiedCount > 0? true: false;
+  }catch(err){
+    console.error(`${__filename} - removeThumbsDownFromReview()`);
+    console.error(err);
+  }finally{
+    console.info("removeThumbsDownFromReview() :: services :: end");
+    return isThumbsDownRemovedFromReview;
+  }
+};
+
+/*
     * addCommentToReview() - add comment to review and comment id to user
     * input: user, date, text, schoolId, professorId, reviewId, userId
     * output: true - comment added successfully
@@ -466,6 +559,10 @@ module.exports = {
   getProfessorsById,
   addReviewToProfessor,
   removeReviewFromProfessor,
+  addThumbsUpToReview,
+  removeThumbsUpFromReview,
+  addThumbsDownToReview,
+  removeThumbsDownFromReview,
   addCommentToReview,
   removeCommentFromReview,
 };
