@@ -26,11 +26,11 @@
 
       <div class="thumbs-up-down">
         <form method="POST" action="/schools/{{../schoolId}}/professors/{{../professorId}}/{{this._id}}/thumbs-up">
-          <span>{{this.thumbsUp.length}}</span><input id="thumbsUpBtn" type="image" src="/public/images/thumbsup.png" should-disable="{{this.disableThumbsUp}}">
+          <span>{{this.thumbsUp.length}}</span><input id="thumbsUpBtn" name="thumbsUpBtn" type="image" src="/public/images/thumbsup.png" alt="Click here to Like this review" should-disable="{{this.disableThumbsUp}}">
         </form>
 
         <form method="POST" action="/schools/{{../schoolId}}/professors/{{../professorId}}/{{this._id}}/thumbs-down">
-          <span>{{this.thumbsDown.length}}</span><input id="thumbsDownBtn" type="image" src="/public/images/thumbsdown.png" should-disable="{{this.disableThumbsDown}}">
+          <span>{{this.thumbsDown.length}}</span><input id="thumbsDownBtn" name="thumbsDownBtn" type="image" src="/public/images/thumbsdown.png" alt="Click here to Dislike this review" should-disable="{{this.disableThumbsDown}}">
         </form>
       </div>
 
