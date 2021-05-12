@@ -69,3 +69,22 @@ a {
   width: 2rem;
   height: 2rem;
 }
+
+.professorDetails .list-group-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.professorDetails .thumbs-up-down {
+  display: flex;
+  flex-direction: row;
+}
+
+.professorDetails .thumbs-up-down form {
+  display: flex;
+  align-items: center;
+}
+
+.professorDetails .thumbs-up-down form span {
+  margin: 0 4px;
+}

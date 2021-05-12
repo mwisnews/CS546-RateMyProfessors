@@ -3,6 +3,8 @@
     {{lastName}}, {{firstName}}
   </h2>
 
+  <p class="error">{{error}}</p>
+
   <div class="professor-results-header">
     <h3>{{overallRating}} Overall Rating</h3>
     <h3>{{averageDifficulty}} Average Difficulty</h3>
@@ -13,18 +15,25 @@
     {{#each reviews}}
     <li class="list-group-item">
       <span class="date">{{this.date}}</span>
-      <br>
+
       <span class="rating">Rating: {{this.rating}}</span>
-      <br>
+
       <span class="difficulty">Difficulty: {{this.difficulty}}</span>
-      <br>
+
       <span class="course">Course: {{this.course}}</span>
-      <br>
+
       <span class="review">Review: {{this.review}}</span>
-      <br>
-      <input id="thumbsUpBtn" type="image" src="/public/images/thumbsup.png">
-      <input id="thumbsDownBtn" type="image" src="/public/images/thumbsdown.png">
-      <br>
+
+      <div class="thumbs-up-down">
+        <form method="POST" action="/schools/{{../schoolId}}/professors/{{../professorId}}/{{this._id}}/thumbs-up">
+          <span>{{this.thumbsUp.length}}</span><input id="thumbsUpBtn" type="image" src="/public/images/thumbsup.png" should-disable="{{this.disableThumbsUp}}">
+        </form>
+
+        <form method="POST" action="/schools/{{../schoolId}}/professors/{{../professorId}}/{{this._id}}/thumbs-down">
+          <span>{{this.thumbsDown.length}}</span><input id="thumbsDownBtn" type="image" src="/public/images/thumbsdown.png" should-disable="{{this.disableThumbsDown}}">
+        </form>
+      </div>
+
       {{#each comments}}
       <ul>
         <li class="list-group-item">
@@ -42,3 +51,5 @@
   </ul>
 
 </div>
+
+<script src="/public/js/professor-details.js"></script>

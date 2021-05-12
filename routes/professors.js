@@ -46,10 +46,14 @@ router.get("/:professorId", async (req, res) => {
     let averageDifficulty = 0;
     if (professorInfo[0].reviews !== undefined) {
       for (i = 0; i < professorInfo[0].reviews.length; i++) {
-        averageDifficulty += Number.parseFloat(
-          professorInfo[0].reviews[i].difficulty
-        );
+        let review = professorInfo[0].reviews[i];
+
+        averageDifficulty += Number.parseFloat(review.difficulty);
+
+        review.disableThumbsUp = (review.thumbsUp || []).length > 0;
+        review.disableThumbsDown = (review.thumbsDown || []).length > 0;
       }
+
       averageDifficulty /= professorInfo[0].reviews.length;
       averageDifficulty = averageDifficulty.toFixed(2).toString();
     }
@@ -64,6 +68,7 @@ router.get("/:professorId", async (req, res) => {
       overallRating: professorInfo[0].overallRating.toFixed(2),
       numberOfReviews: professorInfo[0].numberOfReviews,
       averageDifficulty: averageDifficulty,
+      error: req.body.error,
     });
   } catch (e) {
     res.status(404);
@@ -211,6 +216,44 @@ router.post("/:professorId/:reviewId", async (req, res) => {
       error: true,
     });
   }
+});
+
+router.post("/:professorId/:reviewId/thumbs-up", async (req, res) => {
+  let thumbsUpAdded;
+
+  try {
+    thumbsUpAdded = await schoolService.addThumbsUpToReview(
+      req.params.schoolId,
+      req.params.professorId,
+      req.params.reviewId,
+      req.session.userId
+    );
+  } catch (err) {}
+
+  if (!thumbsUpAdded) req.body.error = "Could not like review";
+
+  res.redirect(
+    `/schools/${req.params.schoolId}/professors/${req.params.professorId}`
+  );
+});
+
+router.post("/:professorId/:reviewId/thumbs-down", async (req, res) => {
+  let thumbsDownAdded;
+
+  try {
+    thumbsDownAdded = await schoolService.addThumbsDownToReview(
+      req.params.schoolId,
+      req.params.professorId,
+      req.params.reviewId,
+      req.session.userId
+    );
+  } catch (err) {}
+
+  if (!thumbsDownAdded) req.body.error = "Could not like review";
+
+  res.redirect(
+    `/schools/${req.params.schoolId}/professors/${req.params.professorId}`
+  );
 });
 
 module.exports = router;
