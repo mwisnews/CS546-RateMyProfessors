@@ -52,21 +52,13 @@ const getSchoolsById = (schoolIds) => {
   console.log("In getSchoolsById Validation End");
 };
 
-const addProfessorToSchool = (firstName, lastName, schoolId, courses) => {
+const addProfessorToSchool = (firstName, lastName) => {
   console.log("In addProfessorToSchool Validation Start");
   const errors = [];
   if (!isNonEmptyString(firstName))
     errors.push("First Name must be a non-empty string!");
   if (!isNonEmptyString(lastName))
     errors.push("Last Name must be a non-empty string!");
-  if (!isValidId(schoolId)) errors.push("You must provide valid ID!");
-  if (!isValidObjectId(schoolId)) errors.push("Invalid Object ID!");
-  if (!isValidIArray(courses)) errors.push("Course Field cannot be empty!");
-  for (var i = 0; i < courses.length; i++) {
-    if (!isNonEmptyString(courses[i])) {
-      errors.push("Courses must be a non-empty string!");
-    }
-  }
   if (errors.length) throw errors;
   console.log("In addProfessorToSchool Validation End");
 };
