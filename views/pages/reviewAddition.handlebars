@@ -8,27 +8,30 @@
         <div class="form-group">
             <label for="reviewRatingBox">Please select your rating for the professor (0-5 scale where 5 is excellent and 0 is poor)</label>
             <input type="number" name="reviewRating" id="reviewRatingBox" placeholder="Rating of the Professor"
-                class="form-control" min="0" max="5" step="0.1" required>
+                class="form-control" min="0" max="5" step="0.1" required value="{{rating}}">
         </div>
 
         <div class="form-group">
             <label for="reviewDifficultyBox">Please select your difficulty rating for the professor (0-5 scale where 5 is hard and 0 is easy)</label>
             <input type="number" name="reviewDifficulty" id="reviewDifficultyBox" placeholder="Difficulty Rating of the Professor"
-                class="form-control" min="0" max="5" step="0.1" required>
+                class="form-control" min="0" max="5" step="0.1" required value="{{difficulty}}">
         </div>
 
         <div class="form-group">
             <label for="courseNameBox">Please enter the name of the course</label>
             <input type="text" name="courseName" id="courseNameBox" placeholder="Course Name"
-                class="form-control" required>
+                class="form-control" required value="{{course}}">
         </div>
 
         <div class="form-group">
             <label for="reviewTextBox">Please enter your review</label>
             <input type="text" name="reviewText" id="reviewTextBox" placeholder="Review"
-                class="form-control" required>
+                class="form-control" required value="{{review}}">
         </div>
 
         <button id="newReviewSubmitBtn" type="submit" class="btn btn-primary">Post</button>
+        <p class="error">
+            {{error}}
+        </p>
     </form>
 </div>
