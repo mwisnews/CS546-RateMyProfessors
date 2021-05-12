@@ -150,4 +150,38 @@ router.post("/:professorId/createReview", async (req, res) => {
   }
 });
 
+router.post("/:professorId/:reviewId", async (req, res) => {
+  const professorId = req.params.professorId;
+  const schoolId = req.params.schoolId;
+  const userId = req.session.user._id;
+  const reviewId = req.params.reviewId;
+  try {
+    const commentText = trim(req.body.commentsField);
+    const date = new Date();
+
+    const addedReviewStatus = await schoolService.addCommentToReview(
+      date,
+      commentText,
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    console.log(addedReviewStatus);
+
+    if (addedReviewStatus === true) {
+      res.redirect(`/schools/${schoolId}/professors/${professorId}`);
+    } else {
+      throw new Error();
+    }
+  } catch (err) {
+    res.status(401).render("pages/professorDetails", {
+      title: "Please Try Again",
+      professorId: professorId,
+      schoolId: schoolId,
+      error: true,
+    });
+  }
+});
+
 module.exports = router;
