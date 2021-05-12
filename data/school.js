@@ -196,6 +196,8 @@ const addReviewToProfessor = async (
       course,
       review,
       date,
+      thumbsUp: [],
+      thumbsDown: [],
     };
     const db = await mongodbConnection.getDB();
     let [ratings] = await db
