@@ -24,6 +24,12 @@
       <br>
       <input id="thumbsUpBtn" type="image" src="/public/images/thumbsup.png">
       <input id="thumbsDownBtn" type="image" src="/public/images/thumbsdown.png">
+      <br>
+      <label for="commentsField">Comment on this review:</label>
+      <form method="POST" action="/schools/{{schoolId}}/professors/{{professorId}}/{{this._id}}">
+      <input id="commentsField", type="text", name="commentsField", placeholder="Comment">
+      <button id="commentsSubmitBtn" class="btn btn-primary" type="submit">Submit</button>
+      </form>
     </li>
     {{/each}}
   </ul>
