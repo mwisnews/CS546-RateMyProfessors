@@ -105,7 +105,7 @@ const addProfessorToSchool = async (
         { _id: ObjectID(schoolId) },
         { $addToSet: { professors: professorDocument } }
       );
-    console.log(result);
+    // console.log(result);
     return { id: _id, isInserted: result.modifiedCount > 0 ? true : false };
   } catch (err) {
     throw err;
@@ -324,6 +324,98 @@ const getReviewsById = async (reviewIds) => {
 };
 
 /*
+* Thumbs dp & Thumbs down
+*/
+
+const addThumbsUpToReview = async (schoolId, professorId, reviewId, userId) => {
+  try{
+    const db = await mongodbConnection.getDB();
+    return db.collection(_collection).updateOne(
+      {
+        _id: ObjectID(schoolId),
+      },
+      {
+        $addToSet: { "professors.$[a].reviews.$[b].thumbsUp": ObjectID(userId) },
+      },
+      {
+        arrayFilters: [
+          { "a._id": ObjectID(professorId) },
+          { "b._id": ObjectID(reviewId) },
+        ],
+      }
+    );
+  }catch(err){
+    throw err;
+  }
+};
+
+const removeThumbsUpFromReview = async (schoolId, professorId, reviewId, userId) => {
+  try{
+    const db = await mongodbConnection.getDB();
+    return await db.collection(_collection).updateOne(
+      { _id: ObjectID(schoolId) },
+      {
+        $pull: {
+          "professors.$[a].reviews.$[b].thumbsUp": ObjectID(userId),
+        },
+      },
+      {
+        arrayFilters: [
+          { "a._id": ObjectID(professorId) },
+          { "b._id": ObjectID(reviewId) },
+        ],
+      }
+    );
+  }catch(err){
+    throw err;
+  }
+};
+
+const addThumbsDownToReview = async (schoolId, professorId, reviewId, userId) => {
+  try{
+    const db = await mongodbConnection.getDB();
+    return db.collection(_collection).updateOne(
+      {
+        _id: ObjectID(schoolId),
+      },
+      {
+        $addToSet: { "professors.$[a].reviews.$[b].thumbsDown": ObjectID(userId) },
+      },
+      {
+        arrayFilters: [
+          { "a._id": ObjectID(professorId) },
+          { "b._id": ObjectID(reviewId) },
+        ],
+      }
+    );
+  }catch(err){
+    throw err;
+  }
+};
+
+const removeThumbsDownFromReview = async (schoolId, professorId, reviewId, userId) => {
+  try{
+    const db = await mongodbConnection.getDB();
+    return await db.collection(_collection).updateOne(
+      { _id: ObjectID(schoolId) },
+      {
+        $pull: {
+          "professors.$[a].reviews.$[b].thumbsDown": ObjectID(userId),
+        },
+      },
+      {
+        arrayFilters: [
+          { "a._id": ObjectID(professorId) },
+          { "b._id": ObjectID(reviewId) },
+        ],
+      }
+    );
+  }catch(err){
+    throw err;
+  }
+};
+
+/*
  * Comments
  */
 
@@ -425,6 +517,10 @@ module.exports = {
   addReviewToProfessor,
   removeReviewFromProfessor,
   getReviewsById,
+  addThumbsUpToReview,
+  removeThumbsUpFromReview,
+  addThumbsDownToReview,
+  removeThumbsDownFromReview,
   addCommentToReview,
   removeCommentFromReview,
   getCommentsById,
