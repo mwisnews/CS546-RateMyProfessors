@@ -49,3 +49,23 @@ a {
 .schools .location {
   min-width: 300px;
 }
+
+.professorDetails .rating {
+  min-width: 300px;
+}
+
+.professorDetails .difficulty {
+  min-width: 300px;
+}
+
+.professorDetails .professor-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#thumbsUpBtn,
+#thumbsDownBtn {
+  width: 2rem;
+  height: 2rem;
+}

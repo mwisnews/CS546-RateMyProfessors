@@ -2,5 +2,30 @@
   <h2>
     {{lastName}}, {{firstName}}
   </h2>
-<a href="/schools/{{schoolId}}/professors/{{professorId}}/createReview">Add a Review!</a>
+
+  <div class="professor-results-header">
+    <h3>{{overallRating}} Overall Rating</h3>
+    <h3>{{averageDifficulty}} Average Difficulty</h3>
+    <h3>{{numberOfReviews}} Reviews</h3>
+    <a href="/schools/{{schoolId}}/professors/{{professorId}}/createReview">Add a review!</a>
+  </div>
+  <ul class="list-group">
+    {{#each reviews}}
+    <li class="list-group-item">
+      <span class="date">{{this.date}}</span>
+      <br>
+      <span class="rating">Rating: {{this.rating}}</span>
+      <br>
+      <span class="difficulty">Difficulty: {{this.difficulty}}</span>
+      <br>
+      <span class="course">Course: {{this.course}}</span>
+      <br>
+      <span class="review">Review: {{this.review}}</span>
+      <br>
+      <input id="thumbsUpBtn" type="image" src="/public/images/thumbsup.png">
+      <input id="thumbsDownBtn" type="image" src="/public/images/thumbsdown.png">
+    </li>
+    {{/each}}
+  </ul>
+
 </div>
