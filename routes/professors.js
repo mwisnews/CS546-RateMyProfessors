@@ -61,7 +61,7 @@ router.get("/:professorId", async (req, res) => {
       professorId: professorInfo[0]._id,
       schoolId: professorInfo[0].schoolId,
       reviews: professorInfo[0].reviews,
-      overallRating: professorInfo[0].overallRating,
+      overallRating: professorInfo[0].overallRating.toFixed(2),
       numberOfReviews: professorInfo[0].numberOfReviews,
       averageDifficulty: averageDifficulty,
     });
@@ -121,13 +121,38 @@ router.post("/:professorId/createReview", async (req, res) => {
   const professorId = req.params.professorId;
   const schoolId = req.params.schoolId;
   const userId = req.session.user._id;
-  try {
-    const rating = trim(req.body.reviewRating);
-    const difficulty = trim(req.body.reviewDifficulty);
-    const course = trim(req.body.courseName);
-    const review = trim(req.body.reviewText);
-    const date = new Date();
+  const rating = parseFloat(trim(req.body.reviewRating));
+  const difficulty = parseFloat(trim(req.body.reviewDifficulty));
+  const course = trim(req.body.courseName);
+  const review = trim(req.body.reviewText);
+  const date = new Date();
 
+  try {
+    validation.addReviewToProfessor(
+      rating,
+      difficulty,
+      course,
+      review,
+      date,
+      professorId,
+      schoolId,
+      userId
+    );
+  } catch (errorArr) {
+    res.status(400).render("pages/reviewAddition", {
+      title: "Add a Review",
+      professorId: professorId,
+      schoolId: schoolId,
+      error: errorArr.join(", "),
+      rating,
+      difficulty,
+      course,
+      review,
+    });
+    return;
+  }
+
+  try {
     const addedReviewStatus = await schoolService.addReviewToProfessor(
       rating,
       difficulty,
@@ -138,7 +163,6 @@ router.post("/:professorId/createReview", async (req, res) => {
       schoolId,
       userId
     );
-    console.log(addedReviewStatus);
 
     if (addedReviewStatus === true) {
       res.redirect(`/schools/${schoolId}/professors/${professorId}`);
