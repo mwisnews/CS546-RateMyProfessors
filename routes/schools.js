@@ -123,6 +123,31 @@ router.use("/:schoolId/professors", async (req, res, next) => {
   });
 });
 
+router.post("/:schoolId/professors", async (req, res) => {
+  let professors;
+
+  try {
+    professors = await schoolService.getAllProfessorsFromSchool(
+      req.params.schoolId
+    );
+  } catch (e) {
+    professors = [];
+  }
+
+  const professorName = req.body.professorName || "";
+  const filteredProfessors = professors.filter(
+    (proff) =>
+      proff.firstName.toLowerCase().startsWith(professorName.toLowerCase()) ||
+      proff.lastName.toLowerCase().startsWith(professorName.toLowerCase())
+  );
+
+  res.render("pages/professorSelect", {
+    title: "Professor",
+    professors: filteredProfessors,
+    professorName,
+  });
+});
+
 router.use("/:schoolId/professors", professorRoutes);
 
 module.exports = router;
