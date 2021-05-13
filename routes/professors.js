@@ -226,7 +226,7 @@ router.post("/:professorId/:reviewId/thumbs-up", async (req, res) => {
       req.params.schoolId,
       req.params.professorId,
       req.params.reviewId,
-      req.session.userId
+      req.session.user._id
     );
   } catch (err) {}
 
@@ -245,7 +245,7 @@ router.post("/:professorId/:reviewId/thumbs-down", async (req, res) => {
       req.params.schoolId,
       req.params.professorId,
       req.params.reviewId,
-      req.session.userId
+      req.session.user._id
     );
   } catch (err) {}
 
