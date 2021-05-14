@@ -124,9 +124,11 @@ router.use("/:schoolId/professors", async (req, res, next) => {
 });
 
 router.post("/:schoolId/professors", async (req, res) => {
+  let schoolInfo;
   let professors;
 
   try {
+    schoolInfo = await schoolService.getSchoolsById(req.params.schoolId);
     professors = await schoolService.getAllProfessorsFromSchool(
       req.params.schoolId
     );
@@ -134,7 +136,7 @@ router.post("/:schoolId/professors", async (req, res) => {
     professors = [];
   }
 
-  const professorName = req.body.professorName || "";
+  const professorName = trim(req.body.professorName);
   const filteredProfessors = professors.filter(
     (proff) =>
       proff.firstName.toLowerCase().startsWith(professorName.toLowerCase()) ||
@@ -142,7 +144,9 @@ router.post("/:schoolId/professors", async (req, res) => {
   );
 
   res.render("pages/professorSelect", {
-    title: "Professor",
+    schoolName: "Professors at " + schoolInfo[0].name,
+    title: "Professors",
+    schoolId: req.params.schoolId,
     professors: filteredProfessors,
     professorName,
   });
