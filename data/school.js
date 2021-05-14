@@ -11,7 +11,7 @@ const addSchool = async (
   zipcode,
   addedBy
 ) => {
-  validation.addSchool(name, educationLevel, city, state, zipcode, addedBy);
+  // validation.addSchool(name, educationLevel, city, state, zipcode, addedBy);
 
   const db = await mongodbConnection.getDB();
 
@@ -55,6 +55,15 @@ const getAllSchools = async () => {
       .find({})
       .project({ "professors.reviews": 0 })
       .toArray();
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getAllSchoolsData = async () => {
+  try {
+    const db = await mongodbConnection.getDB();
+    return await db.collection(_collection).find({}).toArray();
   } catch (err) {
     throw err;
   }
@@ -530,6 +539,7 @@ module.exports = {
   addSchool,
   removeSchool,
   getAllSchools,
+  getAllSchoolsData,
   getSchoolsById,
   addProfessorToSchool,
   removeProfessorFromSchool,
