@@ -28,6 +28,10 @@ a {
   font-size: 16px;
 }
 
+.logout-link {
+  display: none;
+}
+
 .schools .school-results-header,
 .schools .list-group-item {
   display: flex;
