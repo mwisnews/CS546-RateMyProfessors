@@ -144,7 +144,7 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
   console.log("In removeReviewFromProfessor Validation End");
 };
 
-const addCommentToReview = async (
+const addCommentToReview = (
   date,
   text,
   schoolId,
@@ -156,20 +156,15 @@ const addCommentToReview = async (
   const errors = [];
   if (!isNonEmptyString(text)) errors.push("Text must be a non-empty string!");
   if (!isValidId(schoolId)) errors.push("You must provide valid School ID!");
-  if (!isValidObjectId(schoolId)) errors.push("Invalid School Object ID!");
   if (!isValidId(professorId))
     errors.push("You must provide valid professor ID!");
-  if (!isValidObjectId(professorId))
-    errors.push("Invalid Professor Object ID!");
   if (!isValidId(reviewId)) errors.push("You must provide valid Review ID!");
-  if (!isValidObjectId(reviewId)) errors.push("Invalid Object Review ID!");
   if (!isValidId(userId)) errors.push("You must provide valid User ID!");
-  if (!isValidObjectId(userId)) errors.push("Invalid Object User ID!");
   if (errors.length) throw errors;
   console.log("In addCommentToReview Validation End");
 };
 
-const removeCommentFromReview = async (
+const removeCommentFromReview = (
   schoolId,
   professorId,
   reviewId,

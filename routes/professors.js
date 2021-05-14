@@ -32,6 +32,9 @@ router.get("/newProfessor", async (req, res) => {
 });
 
 router.get("/:professorId", async (req, res) => {
+  const errorMessage = req.session.errorMessage;
+  req.session.errorMessage = null;
+
   try {
     let professorInfo = await schoolService.getProfessorsById(
       req.params.professorId
@@ -68,7 +71,7 @@ router.get("/:professorId", async (req, res) => {
       overallRating: professorInfo[0].overallRating.toFixed(2),
       numberOfReviews: professorInfo[0].numberOfReviews,
       averageDifficulty: averageDifficulty,
-      error: req.body.error,
+      error: errorMessage,
     });
   } catch (e) {
     res.status(404);
@@ -189,10 +192,27 @@ router.post("/:professorId/:reviewId", async (req, res) => {
   const schoolId = req.params.schoolId;
   const userId = req.session.user._id;
   const reviewId = req.params.reviewId;
-  try {
-    const commentText = trim(req.body.commentsField);
-    const date = new Date();
 
+  const commentText = trim(req.body.commentsField);
+  const date = new Date();
+
+  try {
+    validation.addCommentToReview(
+      date,
+      commentText,
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+  } catch (errorArr) {
+    req.session.errorMessage = errorArr.join(", ");
+
+    res.redirect(`/schools/${schoolId}/professors/${professorId}`);
+    return;
+  }
+
+  try {
     const addedReviewStatus = await schoolService.addCommentToReview(
       date,
       commentText,
@@ -230,7 +250,7 @@ router.post("/:professorId/:reviewId/thumbs-up", async (req, res) => {
     );
   } catch (err) {}
 
-  if (!thumbsUpAdded) req.body.error = "Could not like review";
+  if (!thumbsUpAdded) req.session.errorMessage = "Could not like review";
 
   res.redirect(
     `/schools/${req.params.schoolId}/professors/${req.params.professorId}`
@@ -249,7 +269,7 @@ router.post("/:professorId/:reviewId/thumbs-down", async (req, res) => {
     );
   } catch (err) {}
 
-  if (!thumbsDownAdded) req.body.error = "Could not like review";
+  if (!thumbsDownAdded) req.session.errorMessage = "Could not dislike review";
 
   res.redirect(
     `/schools/${req.params.schoolId}/professors/${req.params.professorId}`
