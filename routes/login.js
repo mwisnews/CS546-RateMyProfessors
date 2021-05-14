@@ -3,6 +3,8 @@ const { userService } = require("../services");
 const validation = require("../Validation/userServices");
 const router = express.Router();
 
+const trim = (str) => (str || "").trim();
+
 router.get("/", async (req, res) => res.redirect("/login"));
 
 router.get("/login", async (req, res) => {
@@ -61,11 +63,11 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/newUser", async (req, res) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const email = req.body.email;
-  const password = req.body.password;
-  const passwordConfirm = req.body.passwordConfirm;
+  const firstName = trim(req.body.firstName);
+  const lastName = trim(req.body.lastName);
+  const email = trim(req.body.email);
+  const password = trim(req.body.password);
+  const passwordConfirm = trim(req.body.passwordConfirm);
   const dateJoined = new Date();
 
   try {
