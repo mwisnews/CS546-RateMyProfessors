@@ -53,8 +53,12 @@ router.get("/:professorId", async (req, res) => {
 
         averageDifficulty += Number.parseFloat(review.difficulty);
 
-        review.disableThumbsUp = (review.thumbsUp || []).length > 0;
-        review.disableThumbsDown = (review.thumbsDown || []).length > 0;
+        review.disableThumbsUp = review.thumbsUp
+          .map((id) => id.toString())
+          .includes(req.session.user._id);
+        review.disableThumbsDown = review.thumbsDown
+          .map((id) => id.toString())
+          .includes(req.session.user._id);
       }
 
       averageDifficulty /= professorInfo[0].reviews.length;
