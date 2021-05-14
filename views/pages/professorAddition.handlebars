@@ -1,25 +1,49 @@
 <div id="newProfessorTexts">
-    <h1 id="newProfessorWelcome">Add a Professor</h1>
-    <br>
-    <h2 id="newProfessorPrompt">Please fill out the form below and click Submit.</h2>
+  <h1 id="newProfessorWelcome">Add a Professor</h1>
+  <br />
+  <h2 id="newProfessorPrompt">Please fill out the form below and click Submit.</h2>
 </div>
 <div id="newProfessorFormDiv">
-    <form method="POST" id="newProfessorForm" action="/schools/{{schoolId}}/professors/newProfessor">
-        <div class="form-group">
-            <label for="professorFirstNameBox">Please enter the professor's first name</label>
-            <input type="text" name="professorFirstName" id="professorFirstNameBox" placeholder="Professor's First Name"
-                class="form-control" required>
-        </div>
+  <form
+    method="POST"
+    id="newProfessorForm"
+    action="/schools/{{schoolId}}/professors/newProfessor"
+  >
+    <div class="form-group">
+      <label for="professorFirstNameBox">Please enter the professor's first name</label>
+      <input
+        type="text"
+        name="professorFirstName"
+        id="professorFirstNameBox"
+        pattern="[A-Za-z]+"
+        title="Input only alphabet characters"
+        placeholder="Professor's First Name"
+        class="form-control"
+        required
+      />
+    </div>
 
-        <div class="form-group">
-            <label for="professorLastNameBox">Please enter the professor's last name</label>
-            <input type="text" name="professorLastName" id="professorLastNameBox" placeholder="Professor's Last Name"
-                class="form-control" required>
-        </div>
+    <div class="form-group">
+      <label for="professorLastNameBox">Please enter the professor's last name</label>
+      <input
+        type="text"
+        name="professorLastName"
+        id="professorLastNameBox"
+        pattern="[A-Za-z]+"
+        title="Input only alphabet characters"
+        placeholder="Professor's Last Name"
+        class="form-control"
+        required
+      />
+    </div>
 
-        <button id="newProfessorSubmitBtn" type="submit" class="btn btn-primary">Submit</button>
-        <p class="error"></p>
-    </form>
+    <button
+      id="newProfessorSubmitBtn"
+      type="submit"
+      class="btn btn-primary"
+    >Submit</button>
+    <p class="error"></p>
+  </form>
 </div>
 
 <script src="/public/js/add-professor.js"></script>
