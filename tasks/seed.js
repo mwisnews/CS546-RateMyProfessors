@@ -385,6 +385,13 @@ const schoolData = require("../data/school");
               rev._id,
               users[0][0]
             );
+            // Add Thumbs Up
+            await schoolService.addThumbsUpToReview(
+              schData._id,
+              prof._id,
+              rev._id,
+              users[2][0]
+            );
             console.log(chalk.green("Comment added successfully"));
           } catch (err) {
             console.log(chalk.red("Comment could not be added"));
@@ -397,6 +404,13 @@ const schoolData = require("../data/school");
               prof._id,
               rev._id,
               users[1][0]
+            );
+            // Add Thumbs Down
+            await schoolService.addThumbsDownToReview(
+              schData._id,
+              prof._id,
+              rev._id,
+              users[3][0]
             );
             console.log(chalk.green("Comment added successfully"));
           } catch (err) {
