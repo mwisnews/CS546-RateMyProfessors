@@ -1,6 +1,6 @@
 const schoolData = require("../data").schoolData;
 const userData = require("../data").userData;
-
+const validation = require("../Validation/schoolServices");
 const ObjectID = require("mongodb").ObjectID;
 
 /*
@@ -24,6 +24,7 @@ const addSchool = async (
   let insertedId = null;
   let duplicateSchool = false;
   try {
+    validation.addSchool(name, educationLevel, city, state, zipcode, addedBy);
     const result = await schoolData.addSchool(
       name,
       educationLevel,
@@ -61,6 +62,7 @@ const removeSchool = async (schoolId) => {
   console.info("removeSchool() :: services :: start");
   isDeleted = false;
   try {
+    validation.removeSchool(schoolId);
     let userId = await userData.getUserIdWhoAddedSchoolId(schoolId);
     if (userId[0]?._id) {
       userId = userId[0]._id;
@@ -118,6 +120,7 @@ const getSchoolsById = async (schoolIds) => {
   console.info("getSchoolsById() :: services :: start");
   let result = [];
   try {
+    validation.getSchoolsById(schoolIds);
     result = await schoolData.getSchoolsById(schoolIds);
   } catch (err) {
     console.error(`${__filename} - getSchoolsById()`);
@@ -146,6 +149,7 @@ const addProfessorToSchool = async (
   let result = null;
   let id = null;
   try {
+    validation.addProfessorToSchool(firstName, lastName, schoolId);
     result = await schoolData.addProfessorToSchool(
       firstName,
       lastName,
@@ -173,6 +177,7 @@ const removeProfessorFromSchool = async (schoolId, professorId) => {
   console.info("removeProfessorFromSchool() :: services :: start");
   let isProfessorRemoved = false;
   try {
+    validation.removeProfessorFromSchool(schoolId, professorId);
     const result = await schoolData.removeProfessorFromSchool(
       schoolId,
       professorId
@@ -197,6 +202,7 @@ const getAllProfessorsFromSchool = async (schoolId) => {
   console.info("getAllProfessorsFromSchool() :: services :: start");
   let professors = [];
   try {
+    validation.getAllProfessorsFromSchool(schoolId);
     const [result] = await schoolData.getAllProfessorsFromSchool(schoolId);
     if (result?.professors) professors = result.professors;
   } catch (err) {
@@ -217,6 +223,7 @@ const getProfessorsById = async (professorIds) => {
   console.info("getProfessorsById() :: services :: start");
   let professorsList = [];
   try {
+    validation.getProfessorsById(professorIds);
     if (!Array.isArray(professorIds)) professorIds = [professorIds];
     const result = await schoolData.getProfessorsById(professorIds);
     result.forEach((professor) => {
@@ -251,22 +258,30 @@ const addReviewToProfessor = async (
   let isReviewAddedToProfessor = false;
   let isReviewAddedToUser = false;
   try {
+    validation.addReviewToProfessor(
+      rating,
+      difficulty,
+      course,
+      review,
+      date,
+      professorId,
+      schoolId,
+      userId
+    );
     const user = await userData.getUsersById(userId);
     // console.log(user);
     if (Array.isArray(user)) {
       if (user.length > 0) {
-        const {
-          result: schoolResult,
-          id: reviewId,
-        } = await schoolData.addReviewToProfessor(
-          rating,
-          difficulty,
-          course,
-          review,
-          date,
-          professorId,
-          schoolId
-        );
+        const { result: schoolResult, id: reviewId } =
+          await schoolData.addReviewToProfessor(
+            rating,
+            difficulty,
+            course,
+            review,
+            date,
+            professorId,
+            schoolId
+          );
         // console.log(schoolResult);
         // console.log(reviewId);
         if (schoolResult?.modifiedCount)
@@ -301,6 +316,7 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
   let isReviewRemovedFromUser = false;
   let isReviewAddedToUserOnFailure = false;
   try {
+    validation.removeReviewFromProfessor(professorId, reviewId, userId);
     const user = await userData.getUsersById(userId);
     // console.log(user);
     if (Array.isArray(user)) {
@@ -346,16 +362,27 @@ const removeReviewFromProfessor = async (professorId, reviewId, userId) => {
 const addThumbsUpToReview = async (schoolId, professorId, reviewId, userId) => {
   console.info("addThumbsUpToReview() :: services :: start");
   isThumbsUpAddedToReview = false;
-  try{
-    let temp_result = await schoolData.removeThumbsDownFromReview(schoolId, professorId, reviewId, userId);
-    let result = await schoolData.addThumbsUpToReview(schoolId, professorId, reviewId, userId);
+  try {
+    validation.addThumbsUpToReview(schoolId, professorId, reviewId, userId);
+    let temp_result = await schoolData.removeThumbsDownFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    let result = await schoolData.addThumbsUpToReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
     // console.log(result);
-    if(result?.modifiedCount)
-      isThumbsUpAddedToReview = result?.modifiedCount > 0? true: false;
-  }catch(err){
+    if (result?.modifiedCount)
+      isThumbsUpAddedToReview = result?.modifiedCount > 0 ? true : false;
+  } catch (err) {
     console.error(`${__filename} - addThumbsUpToReview()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("addThumbsUpToReview() :: services :: end");
     return isThumbsUpAddedToReview;
   }
@@ -367,18 +394,34 @@ const addThumbsUpToReview = async (schoolId, professorId, reviewId, userId) => {
     * output: true - thumbs up removed successfully
               false - unsuccessful
 */
-const removeThumbsUpFromReview = async (schoolId, professorId, reviewId, userId) => {
+const removeThumbsUpFromReview = async (
+  schoolId,
+  professorId,
+  reviewId,
+  userId
+) => {
   console.info("removeThumbsUpFromReview() :: services :: start");
   isThumbsUpRemovedFromReview = false;
-  try{
-    let result = await schoolData.removeThumbsUpFromReview(schoolId, professorId, reviewId, userId);
+  try {
+    validation.removeThumbsUpFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    let result = await schoolData.removeThumbsUpFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
     // console.log(result);
-    if(result?.modifiedCount)
-    isThumbsUpRemovedFromReview = result?.modifiedCount > 0? true: false;
-  }catch(err){
+    if (result?.modifiedCount)
+      isThumbsUpRemovedFromReview = result?.modifiedCount > 0 ? true : false;
+  } catch (err) {
     console.error(`${__filename} - removeThumbsUpFromReview()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("removeThumbsUpFromReview() :: services :: end");
     return isThumbsUpRemovedFromReview;
   }
@@ -390,18 +433,34 @@ const removeThumbsUpFromReview = async (schoolId, professorId, reviewId, userId)
     * output: true - thumbs down added successfully
               false - unsuccessful
 */
-const addThumbsDownToReview = async (schoolId, professorId, reviewId, userId) => {
+const addThumbsDownToReview = async (
+  schoolId,
+  professorId,
+  reviewId,
+  userId
+) => {
   console.info("addThumbsDownToReview() :: services :: start");
-  isThumbsDownAddedToReview = false
-  try{
-    let temp_result = await schoolData.removeThumbsUpFromReview(schoolId, professorId, reviewId, userId);
-    let result = await schoolData.addThumbsDownToReview(schoolId, professorId, reviewId, userId);
-    if(result?.modifiedCount)
-    isThumbsDownAddedToReview = result?.modifiedCount > 0? true: false;
-  }catch(err){
+  isThumbsDownAddedToReview = false;
+  try {
+    validation.addThumbsDownToReview(schoolId, professorId, reviewId, userId);
+    let temp_result = await schoolData.removeThumbsUpFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    let result = await schoolData.addThumbsDownToReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    if (result?.modifiedCount)
+      isThumbsDownAddedToReview = result?.modifiedCount > 0 ? true : false;
+  } catch (err) {
     console.error(`${__filename} - addThumbsDownToReview()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("addThumbsDownToReview() :: services :: end");
     return isThumbsDownAddedToReview;
   }
@@ -413,17 +472,33 @@ const addThumbsDownToReview = async (schoolId, professorId, reviewId, userId) =>
     * output: true - thumbs down removed successfully
               false - unsuccessful
 */
-const removeThumbsDownFromReview = async (schoolId, professorId, reviewId, userId) => {
+const removeThumbsDownFromReview = async (
+  schoolId,
+  professorId,
+  reviewId,
+  userId
+) => {
   console.info("removeThumbsDownFromReview() :: services :: start");
   isThumbsDownRemovedFromReview = false;
-  try{
-    let result = await schoolData.removeThumbsDownFromReview(schoolId, professorId, reviewId, userId);
-    if(result?.modifiedCount)
-    isThumbsDownRemovedFromReview = result?.modifiedCount > 0? true: false;
-  }catch(err){
+  try {
+    validation.removeThumbsDownFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    let result = await schoolData.removeThumbsDownFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
+    if (result?.modifiedCount)
+      isThumbsDownRemovedFromReview = result?.modifiedCount > 0 ? true : false;
+  } catch (err) {
     console.error(`${__filename} - removeThumbsDownFromReview()`);
     console.error(err);
-  }finally{
+  } finally {
     console.info("removeThumbsDownFromReview() :: services :: end");
     return isThumbsDownRemovedFromReview;
   }
@@ -447,20 +522,26 @@ const addCommentToReview = async (
   let isCommentAddedToReview = false;
   let isCommentAddedToUser = false;
   try {
+    validation.addCommentToReview(
+      date,
+      text,
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
     const user = await userData.getUsersById(userId);
     if (Array.isArray(user)) {
       if (user.length > 0) {
-        const {
-          result: schoolResult,
-          id: commentId,
-        } = await schoolData.addCommentToReview(
-          date,
-          text,
-          schoolId,
-          professorId,
-          reviewId,
-          userId
-        );
+        const { result: schoolResult, id: commentId } =
+          await schoolData.addCommentToReview(
+            date,
+            text,
+            schoolId,
+            professorId,
+            reviewId,
+            userId
+          );
         // console.log(">>>>", commentId);
         if (schoolResult?.modifiedCount)
           isCommentAddedToReview =
@@ -507,6 +588,13 @@ const removeCommentFromReview = async (
   let isCommentRemovedFromUser = false;
   let isCommentAddedToUserOnFailure = false;
   try {
+    validation.removeCommentFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      commentId,
+      userId
+    );
     const user = await userData.getUsersById(userId);
     // console.log(user);
     if (Array.isArray(user)) {

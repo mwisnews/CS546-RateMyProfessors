@@ -12,7 +12,6 @@ const addSchool = async (
   addedBy
 ) => {
   // validation.addSchool(name, educationLevel, city, state, zipcode, addedBy);
-
   const db = await mongodbConnection.getDB();
 
   const existingSchool = await db
@@ -38,6 +37,7 @@ const addSchool = async (
 
 const removeSchool = async (schoolId) => {
   try {
+    validation.removeSchool(schoolId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -70,6 +70,11 @@ const getAllSchoolsData = async () => {
 };
 
 const getSchoolsById = async (schoolIds) => {
+  try {
+    validation.getSchoolsById(schoolIds);
+  } catch (err) {
+    throw [err.toString()];
+  }
   if (!Array.isArray(schoolIds)) schoolIds = [schoolIds];
   schoolIds.forEach((id, index) => {
     schoolIds[index] = ObjectID(id);
@@ -97,6 +102,7 @@ const addProfessorToSchool = async (
   courses = []
 ) => {
   try {
+    validation.addProfessorToSchool(firstName, lastName, schoolId);
     const _id = new ObjectID();
     const professorDocument = {
       _id,
@@ -123,6 +129,7 @@ const addProfessorToSchool = async (
 
 const removeProfessorFromSchool = async (schoolId, professorId) => {
   try {
+    validation.removeProfessorFromSchool(schoolId, professorId);
     const db = await mongodbConnection.getDB();
     return await db.collection(_collection).updateOne(
       { _id: ObjectID(schoolId) },
@@ -139,6 +146,7 @@ const removeProfessorFromSchool = async (schoolId, professorId) => {
 
 const getAllProfessorsFromSchool = async (schoolId) => {
   try {
+    validation.getAllProfessorsFromSchool(schoolId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -160,6 +168,11 @@ const getAllProfessorsFromSchool = async (schoolId) => {
 };
 
 const getProfessorsById = async (professorIds) => {
+  try {
+    validation.getProfessorsById(professorIds);
+  } catch (err) {
+    throw [err.toString()];
+  }
   if (!Array.isArray(professorIds)) professorIds = [professorIds];
   professorIds.forEach((id, index) => {
     professorIds[index] = ObjectID(id);
@@ -197,6 +210,15 @@ const addReviewToProfessor = async (
 ) => {
   let result;
   try {
+    validation.addReviewToProfessor(
+      rating,
+      difficulty,
+      course,
+      review,
+      date,
+      professorId,
+      schoolId
+    );
     let id = new ObjectID();
     const reviewDocument = {
       _id: id,
@@ -257,6 +279,7 @@ const addReviewToProfessor = async (
 
 const removeReviewFromProfessor = async (professorId, reviewId) => {
   try {
+    validation.removeReviewFromProfessor(professorId, reviewId);
     const db = await mongodbConnection.getDB();
     let [ratings] = await db
       .collection(_collection)
@@ -314,6 +337,11 @@ const removeReviewFromProfessor = async (professorId, reviewId) => {
 };
 
 const getReviewsById = async (reviewIds) => {
+  try {
+    validation.getReviewsById(reviewIds);
+  } catch (err) {
+    throw [err.toString()];
+  }
   if (!Array.isArray(reviewIds)) reviewIds = [reviewIds];
   reviewIds.forEach((id, index) => {
     reviewIds[index] = ObjectID(id);
@@ -340,6 +368,7 @@ const getReviewsById = async (reviewIds) => {
 
 const addThumbsUpToReview = async (schoolId, professorId, reviewId, userId) => {
   try {
+    validation.addThumbsUpToReview(schoolId, professorId, reviewId, userId);
     const db = await mongodbConnection.getDB();
     return db.collection(_collection).updateOne(
       {
@@ -369,6 +398,12 @@ const removeThumbsUpFromReview = async (
   userId
 ) => {
   try {
+    validation.removeThumbsUpFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
     const db = await mongodbConnection.getDB();
     return await db.collection(_collection).updateOne(
       { _id: ObjectID(schoolId) },
@@ -396,6 +431,7 @@ const addThumbsDownToReview = async (
   userId
 ) => {
   try {
+    validation.addThumbsDownToReview(schoolId, professorId, reviewId, userId);
     const db = await mongodbConnection.getDB();
     return db.collection(_collection).updateOne(
       {
@@ -425,6 +461,12 @@ const removeThumbsDownFromReview = async (
   userId
 ) => {
   try {
+    validation.removeThumbsDownFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
     const db = await mongodbConnection.getDB();
     return await db.collection(_collection).updateOne(
       { _id: ObjectID(schoolId) },
@@ -458,6 +500,14 @@ const addCommentToReview = async (
   userId
 ) => {
   try {
+    validation.addCommentToReview(
+      date,
+      text,
+      schoolId,
+      professorId,
+      reviewId,
+      userId
+    );
     let id = new ObjectID();
     const commentDocument = {
       _id: id,
@@ -493,6 +543,12 @@ const removeCommentFromReview = async (
   commentId
 ) => {
   try {
+    validation.removeCommentFromReview(
+      schoolId,
+      professorId,
+      reviewId,
+      commentId
+    );
     const db = await mongodbConnection.getDB();
     return await db.collection(_collection).updateOne(
       { _id: ObjectID(schoolId) },
@@ -515,6 +571,7 @@ const removeCommentFromReview = async (
 
 const getCommentsById = async (commentIds) => {
   try {
+    validation.getCommentsById(commentIds);
     if (!Array.isArray(commentIds)) commentIds = [commentIds];
     commentIds.forEach((id, index) => {
       commentIds[index] = ObjectID(id);
