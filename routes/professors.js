@@ -103,7 +103,11 @@ router.post("/newProfessor", async (req, res) => {
   const schoolId = req.session.currentSchoolId;
 
   try {
-    validation.addProfessorToSchool(professorFirstName, professorLastName);
+    validation.addProfessorToSchool(
+      professorFirstName,
+      professorLastName,
+      schoolId
+    );
   } catch (e) {
     res.status(400).json({ error: e.join(", ") });
     return;
