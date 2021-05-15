@@ -1,6 +1,6 @@
 const schoolData = require("../data").schoolData;
 const userData = require("../data").userData;
-
+const validation = require("../Validation/userServices");
 const ObjectID = require("mongodb").ObjectID;
 
 /*
@@ -14,6 +14,7 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
   let userId = null;
   let alreadyExists = false;
   try {
+    validation.addUserBE(firstName, lastName, password, email);
     const result = await userData.addUser(
       firstName,
       lastName,
@@ -51,6 +52,7 @@ const removeUser = async (id) => {
   console.info("removeUser() :: services :: start");
   let isDeleted = false;
   try {
+    validation.removeUser(id);
     const result = await userData.removeUser(id);
     if (result?.deletedCount)
       isDeleted = result.deletedCount > 0 ? true : false;
@@ -72,6 +74,7 @@ const getUsersById = async (userIds) => {
   console.info("getUsersById() :: services :: start");
   let result = [];
   try {
+    validation.getUsersById(userIds);
     if (!Array.isArray(userIds)) userIds = [userIds];
     result = await userData.getUsersById(userIds);
   } catch (err) {
@@ -95,6 +98,7 @@ const checkLogin = async (userId, password) => {
   console.info("checkLogin() :: services :: start");
   let result = -9;
   try {
+    validation.checkLogin(userId, password);
     result = await userData.checkLogin(userId, password);
   } catch (err) {
     console.error(`${__filename} - checkLogin()`);

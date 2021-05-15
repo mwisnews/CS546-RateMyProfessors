@@ -1,12 +1,13 @@
 const mongodbConnection = require("../config/mongoConnection");
 const bcrypt = require("bcrypt");
-
+const validation = require("../Validation/userData");
 const ObjectID = require("mongodb").ObjectID;
 const _collection = "Users";
 const saltRounds = 10;
 
 const addUser = async (firstName, lastName, password, email, dateJoined) => {
   try {
+    validation.addUser(firstName, lastName, password, email);
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
     const user = {
       firstName: firstName.toUpperCase(),
@@ -35,6 +36,7 @@ const addUser = async (firstName, lastName, password, email, dateJoined) => {
 
 const removeUser = async (id) => {
   try {
+    validation.removeUser(id);
     const db = await mongodbConnection.getDB();
     return await db.collection(_collection).deleteOne({ _id: ObjectID(id) });
   } catch (err) {
@@ -44,6 +46,7 @@ const removeUser = async (id) => {
 
 const getUsersById = async (userIds) => {
   try {
+    validation.getUsersById(userIds);
     if (!Array.isArray(userIds)) userIds = [userIds];
     userIds.forEach((id, index) => {
       userIds[index] = ObjectID(id);
@@ -61,6 +64,7 @@ const getUsersById = async (userIds) => {
 
 const checkLogin = async (email, password) => {
   try {
+    validation.checkLogin(email, password);
     const db = await mongodbConnection.getDB();
     let [user] = await db
       .collection(_collection)
@@ -85,6 +89,7 @@ const checkLogin = async (email, password) => {
 
 const addReviewToUser = async (userId, reviewId) => {
   try {
+    validation.addReviewToUser(userId, reviewId);
     // console.log(reviewId);
     const db = await mongodbConnection.getDB();
     return await db
@@ -100,6 +105,7 @@ const addReviewToUser = async (userId, reviewId) => {
 
 const deleteReviewFromUser = async (userId, reviewId) => {
   try {
+    validation.deleteReviewFromUser(userId, reviewId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -114,6 +120,7 @@ const deleteReviewFromUser = async (userId, reviewId) => {
 
 const getAllReviewsIdsMadeByUsers = async (userIds) => {
   try {
+    validation.getAllReviewsIdsMadeByUsers(userIds);
     if (!Array.isArray(userIds)) userIds = [userIds];
     userIds.forEach((id, index) => {
       userIds[index] = ObjectID(id);
@@ -131,6 +138,7 @@ const getAllReviewsIdsMadeByUsers = async (userIds) => {
 
 const getAllReviewsContentMadeByUsers = async (userIds) => {
   try {
+    validation.getAllReviewsContentMadeByUsers(userIds);
     if (!Array.isArray(userIds)) userIds = [userIds];
     userIds.forEach((id, index) => {
       userIds[index] = ObjectID(id);
@@ -171,6 +179,7 @@ const getAllReviewsContentMadeByUsers = async (userIds) => {
 
 const addSchoolToUser = async (userId, schoolId) => {
   try {
+    validation.addSchoolToUser(userId, schoolId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -185,6 +194,7 @@ const addSchoolToUser = async (userId, schoolId) => {
 
 const deleteSchoolFromUser = async (userId, schoolId) => {
   try {
+    validation.deleteSchoolFromUser(userId, schoolId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -199,6 +209,7 @@ const deleteSchoolFromUser = async (userId, schoolId) => {
 
 const getAllSchoolsAddedByUsers = async (userIds) => {
   try {
+    validation.getAllSchoolsAddedByUsers(userIds);
     if (!Array.isArray(userIds)) userIds = [userIds];
     userIds.forEach((id, index) => {
       userIds[index] = ObjectID(id);
@@ -216,6 +227,7 @@ const getAllSchoolsAddedByUsers = async (userIds) => {
 
 const getUserIdWhoAddedSchoolId = async (schoolId) => {
   try {
+    validation.getUserIdWhoAddedSchoolId(schoolId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -232,6 +244,7 @@ const getUserIdWhoAddedSchoolId = async (schoolId) => {
 
 const addCommentToUser = async (userId, commentId) => {
   try {
+    validation.addCommentToUser(userId, commentId);
     // console.log("<<<<", commentId);
     const db = await mongodbConnection.getDB();
     return await db
@@ -247,6 +260,7 @@ const addCommentToUser = async (userId, commentId) => {
 
 const deleteCommentFromUser = async (userId, commentId) => {
   try {
+    validation.deleteCommentFromUser(userId, commentId);
     const db = await mongodbConnection.getDB();
     return await db
       .collection(_collection)
@@ -261,6 +275,7 @@ const deleteCommentFromUser = async (userId, commentId) => {
 
 const getAllCommentsLeftByUsers = async (userIds) => {
   try {
+    validation.getAllCommentsLeftByUsers(userIds);
     if (!Array.isArray(userIds)) userIds = [userIds];
     userIds.forEach((id, index) => {
       userIds[index] = ObjectID(id);
