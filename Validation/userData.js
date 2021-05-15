@@ -4,11 +4,10 @@ const isNonEmptyString = (str) =>
   str && typeof str === "string" && str.trim().length > 0;
 const isValidEmail = (str) =>
   str && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(str);
-const isValidId = (id) => id && typeof id === "string" && id.trim().length > 0;
-const isValidIds = (userIds) =>
-  userIds && Array.isArray(userIds) && userIds.length;
+const isValidId = (id) => Boolean(id);
+//const isValidIds = (userIds) => userIds && Array.isArray(userIds) && userIds.length;
 const isValidIArray = (str) => Array.isArray(str) && str.length;
-const isValidObjectId = (id) => ObjectId(id);
+const isValidObjectId = (id) => ObjectId(id.toString());
 const isValidNumber = (num) => num && typeof num === "number";
 const isValidRating = (num) =>
   num && typeof num === "number" && (num > 0) & (num <= 5);
@@ -39,16 +38,16 @@ const removeUser = (id) => {
   console.log("In removeUser Validation End");
 };
 
-const getUsersById = (userIds) => {
-  console.log("In getUserById Validation Start");
+const getUsersById = (userId) => {
+  console.log("In getUsersById Validation Start");
+  // console.log(userId);
+  // console.log(typeof userId);
   const errors = [];
-  if (!isValidIds(userIds)) errors.push("You must provide valid ID!");
-  for (let i = 0; i < userIds.length; i++)
-    if (!(typeof userIds[i] === "string") || !userIds[i].trim().length > 0)
-      errors.push("You must provide valid ID!");
-  if (!isValidObjectId(userIds[i])) errors.push("Invalid Object ID!");
+  // if (!isValidIds(userIds)) errors.push("You must provide valid ID!");
+  if (!isValidId(userId)) errors.push("You must provide valid ID!");
+  if (!isValidObjectId(userId)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
-  console.log("In getUserById Validation End");
+  console.log("In getUsersById Validation End");
 };
 
 const checkLogin = (email, password) => {
@@ -84,26 +83,20 @@ const deleteReviewFromUser = (userId, reviewId) => {
   console.log("In deleteReviewFromUser Validation End");
 };
 
-const getAllReviewsIdsMadeByUsers = (userIds) => {
+const getAllReviewsIdsMadeByUsers = (userId) => {
   console.log("In getAllReviewsIdsMadeByUsers Validation Start");
   const errors = [];
-  if (!isValidIds(userIds)) errors.push("You must provide valid ID!");
-  for (let i = 0; i < userIds.length; i++)
-    if (!(typeof userIds[i] === "string") || !userIds[i].trim().length > 0)
-      errors.push("You must provide valid ID!");
-  if (!isValidObjectId(userIds[i])) errors.push("Invalid Object ID!");
+  if (!isValidIds(userId)) errors.push("You must provide valid ID!");
+  if (!isValidObjectId(userId)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
   console.log("In getAllReviewsIdsMadeByUsers Validation End");
 };
 
-const getAllReviewsContentMadeByUsers = (userIds) => {
+const getAllReviewsContentMadeByUsers = (userId) => {
   console.log("In getAllReviewsContentMadeByUsers Validation Start");
   const errors = [];
-  if (!isValidIds(userIds)) errors.push("You must provide valid ID!");
-  for (let i = 0; i < userIds.length; i++)
-    if (!(typeof userIds[i] === "string") || !userIds[i].trim().length > 0)
-      errors.push("You must provide valid ID!");
-  if (!isValidObjectId(userIds[i])) errors.push("Invalid Object ID!");
+  if (!isValidIds(userId)) errors.push("You must provide valid ID!");
+  if (!isValidObjectId(userId)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
   console.log("In getAllReviewsContentMadeByUsers Validation End");
 };
@@ -111,10 +104,10 @@ const getAllReviewsContentMadeByUsers = (userIds) => {
 const addSchoolToUser = (userId, schoolId) => {
   console.log("In addSchoolToUser Validation Start");
   const errors = [];
-  if (!isValidId(schoolId)) errors.push("You must provide valid ID!");
-  if (!isValidObjectId(schoolId)) errors.push("Invalid Object ID!");
   if (!isValidId(userId)) errors.push("You must provide valid ID!");
   if (!isValidObjectId(userId)) errors.push("Invalid Object ID!");
+  if (!isValidId(schoolId)) errors.push("You must provide valid ID!");
+  if (!isValidObjectId(schoolId)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
   console.log("In addSchoolToUser Validation End");
 };
@@ -130,14 +123,11 @@ const deleteSchoolFromUser = (userId, schoolId) => {
   console.log("In deleteSchoolFromUser Validation End");
 };
 
-const getAllSchoolsAddedByUsers = (userIds) => {
+const getAllSchoolsAddedByUsers = (userId) => {
   console.log("In getAllSchoolsAddedByUsers Validation Start");
   const errors = [];
-  if (!isValidIds(userIds)) errors.push("You must provide valid ID!");
-  for (let i = 0; i < userIds.length; i++)
-    if (!(typeof userIds[i] === "string") || !userIds[i].trim().length > 0)
-      errors.push("You must provide valid ID!");
-  if (!isValidObjectId(userIds[i])) errors.push("Invalid Object ID!");
+  if (!isValidIds(userId)) errors.push("You must provide valid ID!");
+  if (!isValidObjectId(userId)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
   console.log("In getAllSchoolsAddedByUsers Validation End");
 };
@@ -173,14 +163,11 @@ const deleteCommentFromUser = (userId, commentId) => {
   console.log("In deleteCommentFromUser Validation End");
 };
 
-const getAllCommentsLeftByUsers = (userIds) => {
+const getAllCommentsLeftByUsers = (userId) => {
   console.log("In getAllCommentsLeftByUsers Validation Start");
   const errors = [];
-  if (!isValidIds(userIds)) errors.push("You must provide valid ID!");
-  for (let i = 0; i < userIds.length; i++)
-    if (!(typeof userIds[i] === "string") || !userIds[i].trim().length > 0)
-      errors.push("You must provide valid ID!");
-  if (!isValidObjectId(userIds[i])) errors.push("Invalid Object ID!");
+  if (!isValidIds(userId)) errors.push("You must provide valid ID!");
+  if (!isValidObjectId(userId)) errors.push("Invalid Object ID!");
   if (errors.length) throw errors;
   console.log("In getAllCommentsLeftByUsers Validation End");
 };
